@@ -1,0 +1,80 @@
+service: Chatbot1 # Update your service name here
+package:
+  individually: true
+custom:
+  dev_APP_STAGE: 'DEV STAGE'
+  prod_APP_STAGE: 'PROD STAGE'
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: ${opt:region, 'us-east-2'}
+  stackTags:
+    PROJET: CHATBOT
+  environment:
+    APP_STAGE: ${self:custom.${opt:stage, self:provider.stage}_APP_STAGE}
+
+functions:
+  LambdaRedytel:
+    handler: chatbot-fulfillment/index.handler
+    package:
+      exclude:
+        - chatbot-fulfillment/.idea
+        - chatbot-fulfillment/test/**
+        - chatbot-fulfillment/.gitignore
+        - chatbot-fulfillment/authorizer.js
+        - chatbot-fulfillment/chatbot-fulfillment.zip
+        - chatbot-fulfillment/COVID.zip
+        - dialogflow-client/**
+        - .idea/
+        - jenkins/**
+        - user-keys/**
+        - .gitignore
+    events:
+      - http:
+          path: /
+          method: post
+          authorizer: authorizerFunc
+  authorizerFunc:
+    handler: chatbot-fulfillment/authorizer.handler
+    package:
+      exclude:
+        - chatbot-fulfillment/.idea
+        - chatbot-fulfillment/node_modules/**
+        - chatbot-fulfillment/test/**
+        - chatbot-fulfillment/.gitignore
+        - chatbot-fulfillment/app.js
+        - chatbot-fulfillment/chatbot-fulfillment.zip
+        - chatbot-fulfillment/index.js
+        - chatbot-fulfillment/package.json
+        - chatbot-fulfillment/package-lock.json
+        - chatbot-fulfillment/pueblosLeon.xlsx
+        - chatbot-fulfillment/COVID.zip
+        - dialogflow-client/**
+        - .idea/
+        - jenkins/**
+        - user-keys/**
+        - .gitignore
+  LambdaClient:
+    handler: dialogflow-client/app.handler
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: dialogflow-client/chatbotauth.json
+    package:
+      exclude:
+        - dialogflow-client/.idea
+        - dialogflow-client/.gitignore
+        - dialogflow-client/dialogflow-client.zip
+        - chatbot-fulfillment/**
+        - .idea/
+        - jenkins/**
+        - user-keys/**
+        - .gitignore
+    events:
+      - http:
+          path: /client
+          method: post
+          integration: lambda
+          request:
+            template:
+              application/json: '$input.json("$")'
+            passThrough: WHEN_NO_MATCH
+          cors: true

@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "redytel-otyebo",
+  "private_key_id": "72e3ed971269fab0e88361c22ede7d39ba527eb5",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQD2evD+c0MrY4xE\nfc5DvV97hsBiScnzaSG3BkqoAboiUEJkimau9R9rKjg7nVUJmgDVhlM0wqeJhzwx\nCXQYCbEn/Ue6yhfVoqQIFUC2JU7omuUd/1j95yiuUe6MfmM8VvvHNuY42ztbUc51\nRg+4Tzs8XqZWw6g5kwBeCwfMmFiuq76SXLNk1nLdYOer4493J6JtUcVvVakrnwuv\nVogdmUp6aeLOLhvU/BJ6PAW/0abSkDHpkb4erq+sjlh+7SUBOCSaOrD8KcUZ+Q0w\nuID/6onYIrvugZsR/puJJx7Zw6AKuI/ZSD+6xrKioBTLHo8voo6XmNbcn5fSbKrB\nAoG98t4tAgMBAAECggEAAZPk4gQT3H29Ip0ZimZ2a4B/z8FAKS41mInSRYQJUHnq\nCuG16Y3JHzL8fCk0J6UUN0muU6qhTuiOMpQoaZT6TNK6uE/d2jC50xFrwh64BBYl\nvEzroWhu4rrEh6KxeOvnna1UyO1iUmHSK/8AT8I2E1tZvjlvZLrzqCZy7NTW0Htm\nvAt25ERy6J47ZbAJ7KD1uiS/oFfMuGk+SV/8vHTcl9+Ei4RnFFjwBuXJL3uXSVut\nAVVufpCag+KnUr3+fJ7veeGRsgqDMnXspgnNEaPeMZO6AIphhvOCCzd85bM6eo5k\ns4pWI8weCy1aNgHUA5oYe0Euu/421MulQSctnpxTowKBgQD+2ht1n8UFaVaVFI2a\ntY/0Rpx6+n9N+FnIyahTcPuKS+qVfaYFhVJ3a690uAYq1O/zRzo9Ys1ta9BhQoHP\nExDsKP7lVJd/gzggVKK33K6Lr7EaVw8XHsMhWOiIcFwleuCa/UxA5RddcEkGw9do\n4ufE8rdL23hur1gW9d4GrimdbwKBgQD3ly4Oo5oEJO1TjjiYgZY+G27yhkZMbPYc\n/VAozwkf2P6W1BKOEqCHUwLnhaSRr4lxlZCqiceUVpuqGltUVaNY5cOHi195yBwX\nS3yMJgTd2Sj2jvmlAY1A/i9C/3L24RW9XfHQ+/lFJoDs2wLJ47Mb0GnwzyTTsjLB\nEzFvSmcoIwKBgQDB/4WnpFd2JxmhomOowU0zxgyYENeXotW14swfuIHCZMfNxDf9\nO9/qyC5nyy3mrPF7X10WHYADK28Ummv2Fa1sGEjwidRJXLn84nB7RaIY80T9qAf0\nsZYYbHWWZvG+Fiujz+2b+MgweKkeXTY8wX1sjta5B/hFSXTlBYRd0XYcQQKBgQDw\n8A3B8TNQFR9e0GgDARhUGB4/pKuEdASM8XWwQMmAVIpr/LSRzU6qYf3RkBw2Kbx2\n7DV7v9iYYi/ZuQxnZW8wc2dz4A1pVXMAuFTbjaPuwAU86qXGDVyIgtM7P5uA5Elj\nnqhT1uEcifusgvSTwyHpT0fJL8uGt0Ls4OCajK0WQQKBgQCYzUSzHI7uI4K9gDih\ncE11emittt1jZgJkf0/aWXtBw/FvNp6v+yqxZxF/UgerRFfi4VW385JvCjY0WsYg\nDbxgfPcaA0c5yGx29THMJT1EQeE4PGylNb0ZMOplcRp+hvNLxoNFVo0TXOhGFjTP\nc6cpYX+bUfSNqulooqOUjtjxqQ==\n-----END PRIVATE KEY-----\n",
+  "client_email": "dialogflow-client-auth@redytel-otyebo.iam.gserviceaccount.com",
+  "client_id": "113924211750212869986",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/dialogflow-client-auth%40redytel-otyebo.iam.gserviceaccount.com"
+}

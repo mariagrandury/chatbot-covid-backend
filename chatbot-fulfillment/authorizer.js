@@ -60,7 +60,7 @@ exports.handler = function(event, context, callback) {
     console.log('Authorization Decoded Text: ' + text);
     let username = text.split(':')[0];
     let password = text.split(':')[1];
-    if (username === 'redytel' && password === 'redytel') {
+    if (username === 'covid' && password === 'covid') {
       policy.allowAllMethods(); 
     } else {
       policy.denyAllMethods();

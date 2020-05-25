@@ -1,7 +1,7 @@
 'use strict';
 
 const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware');
-const {WebhookClient, Suggestion, Card} = require('dialogflow-fulfillment');
+const {WebhookClient, Suggestion, Card, Image} = require('dialogflow-fulfillment');
 const compression = require('compression');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -15,26 +15,44 @@ let dialogflowSession;
 let noMatchMessages = [];
 let conversacion = [];
 
-let codigoPostal;
-let CPtrue = false;
-let provincia;
+let onInit = true;
+
+let comunidadAutonoma;
 let fase;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function hola(agent) {
     conversacion.push('Intent: ' + agent.intent);
+    agent.add('¡Hola! Soy Aurora y estaré encantada de ayudarle a resolver todas sus dudas sobre el COVID-19.');
+    if (onInit) {
+        agent.add('Le puedo explicar cómo interactuar conmigo si todavía no me conoce.');
+        agent.add(new Suggestion('Explícame'));
+        onInit = false;
+        sugerenciasInicio(agent);
+    } else {
+        agent.add('¿En qué puedo ayudarle?');
+        sugerenciasInicio(agent);
+    }
+}
 
-    agent.add('¡Hola! Soy Aurora, le intentaré ayudar con todas sus dudas sobre el COVID-19.');
+function explicacion(agent) {
+    conversacion.push('Intent: ' + agent.intent);
+    agent.add('Le puedo ayudar si tiene dudas respecto a los síntomas del COVID-19 y cómo actuar si los presenta.');
+    agent.add('También le puedo informar sobres las características de las diferentes fases del plan de transición a una nueva normalidad y la situación de cada comunidad autónoma.');
+    agent.add('Además, le puedo indicar qué medidas de seguridad tomar y la normativa a aplicar.');
+    agent.add('Puede plantearme todas las dudas que tenga respecto al COVID-19 escribiendo en su teclado o selecionnar alguna de las sugerencias que le propongo');
+    agent.add('En todo momento puede escribir \"Menú\" para volver al menú inicial');
+    agent.add('Toda la información la he recogido de la página oficial del Ministerio de Sanidad.');
     agent.add('¿En qué puedo ayudarle?');
     sugerenciasInicio(agent);
 }
 
 function sugerenciasInicio(agent) {
-    agent.add(new Suggestion ('Fases'));
     agent.add(new Suggestion ('Síntomas'));
-    agent.add(new Suggestion ('Normativa'));
+    agent.add(new Suggestion ('Fases'));
     agent.add(new Suggestion ('Medidas seguridad'));
+    agent.add(new Suggestion ('Normativa'));
     if (agent.intent !== 'A - Hola') {
         agent.add(new Suggestion('No, eso es todo'));
     }
@@ -58,166 +76,182 @@ function gracias(agent) {
     sugerenciasInicio(agent);
 }
 
+function menu (agent) {
+    conversacion.push('Intent: ' + agent.intent);
+    agent.add('¿Puedo hacer algo más por usted?');
+    sugerenciasInicio(agent);
+}
+
 function adios(agent) {
     conversacion.push('Intent: ' + agent.intent);
     agent.add('Ha sido un placer ayudarle, ¡hasta pronto!');
 
-    agent.setContext({'name': 'cptrue', 'lifespan': -1});
-    agent.setContext({'name': 'cpfalse', 'lifespan': -1});
-
-    if (codigoPostal) {
-        console.log('CP: ' + codigoPostal);
-    }
-    if (provincia) {
-        console.log('Provincia: ', provincia);
+    if (comunidadAutonoma) {
+        console.log('Comunidad Autónoma: ', comunidadAutonoma);
     }
     console.log('Session: ' + dialogflowSession, conversacion);
     console.log('No match messages: ', noMatchMessages);
-    codigoPostal = '';
-    CPtrue = false;
-    provincia = '';
+
+    comunidadAutonoma = '';
     dialogflowSession = '';
     conversacion = [];
     noMatchMessages = [];
 }
 
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/*
-async function verificarFaseCP() {
-    conversacion.push('Function: verificarFaseCP con CP ' + codigoPostal);
-    let conex = {'CP': '', 'Conexion': [], 'ConexionInfo': ''};
-    if (codigoPostal) {
-        let rows;
-        try {
-            rows = await xlsxFile('chatbot-fulfillment/pueblosLeon.xlsx');
-            for (let i in rows) {
-                if (rows[i][1] == codigoPostal) {
-                    conversacion.push('Function: verificarFaseCP: CP encontrado');
-                    municipios.push(rows[i][0]);
-                    if (rows[i][2] === 'True') {
-                        municipiosFibraU.push(rows[i][0]);
-                        conex.Conexion.push('fibra óptica');
-                    } else if (rows[i][3] === 'True') {
-                        municipiosFibraR.push(rows[i][0]);
-                        conex.Conexion.push('fibra óptica propia');
-                    } else if (rows[i][4] === 'True') {
-                        municipiosWIMAX.push(rows[i][0]);
-                        conex.Conexion.push('internet por WIMAX');
-                    }
-                    if (rows[i][5] !== '-') {
-                        municipiosInfo.push(rows[i][0]);
-                        if (rows[i][5] === 'LEON') {
-                            conex.ConexionInfo = 'Se encargaron de la instalación nuestros compañeros de León.';
-                        } else {
-                            conex.ConexionInfo = '¡Qué suerte! Instalamos el servicio justo el pasado mes de marzo.';
-                        }
-                    }
-                    conex.CP = rows[i][1];
-                }
-            }
-            if (!conex) {
-                conex.Conexion = 'Na de na, sorry bro';
-            }
-            console.log(municipios);
-            console.log(municipiosFibraU);
-            console.log(municipiosFibraR);
-            console.log(municipiosWIMAX);
-            console.log(municipiosInfo);
-            console.log(conex);
-        } catch(err) {
-            console.log('Function: verificarFaseCP: ha ocurrido un problema al leer el excel' + err);
-            conversacion.push('Function: verificarFaseCP: ha ocurrido un problema al leer el excel' + err);
-        }
-    }
-    return conex;
-}
-*/
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/*
-async function faseInfo (agent) {
+// ------------------------------------------------ SÍNTOMAS -----------------------------------------------------------
+const sintomasImageUrl = 'https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov-China/img/COVID19_sintomas.jpg';
+const sintomasComoActuarUrl = 'https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov-China/documentos/20200325_Decalogo_como_actuar_COVID19.pdf';
+
+function sintomas (agent) {
     conversacion.push('Intent: ' + agent.intent);
-
-    if (agent.getContext('cpfalse')) {
-        conversacion.push('Context CPfalse: ' + agent.getContext('cpfalse').lifespan);
-        if (agent.getContext('cpfalse').lifespan) {
-            CPtrue = false;
-            provincia = '';
-        }
-    }
-    if (agent.getContext('cptrue')) {
-        conversacion.push('Context CPtrue: ' + agent.getContext('cptrue').lifespan);
-        if (agent.getContext('cptrue').lifespan) {
-            CPtrue = true;
-        }
-    }
-
-    conversacion.push('CPtrue: ' + CPtrue);
-    if (!CPtrue) {
-        codigoPostal = agent.parameters.codigoPostal;
-        conversacion.push('CP Actualizado: ' + codigoPostal);
-    }
-    if (codigoPostal && !CPtrue) {
-        conversacion.push('ENTRO EN 1');
-        try {
-            provincia = await verificarFaseCP();
-            conversacion.push('Return de verificarFaseCP: ', provincia);
-        } catch (err) {
-            console.log('Hubo un problema al llamar verificarFaseCP:', err);
-            conversacion.push('Hubo un problema al llamar verificarFaseCP:', err);
-        }
-    } else if (provincia && provincia.fase && CPtrue) {
-        conversacion.push('ENTRO EN 2');
-        CPtrue = true;
-        agent.setContext({'name': 'cptrue', 'lifespan': 10});
-        // agent.setContext({'name': 'cpfalse', 'lifespan': -1});
-        if (fase === 'fase 1') {
-            fase1();
-        } else if (fase === 'fase 2') {
-            fase2();
-        } else if (fase === 'fase 3') {
-            fase3();
-        }
-    } else if (provincia && !provincia.fase && CPtrue) { // TODO quiere realizar otra búsqueda?
-        conversacion.push('ENTRO EN 3');
-        agent.add('Lo siento, no encuentro información sobre la fase correspondiente a la provincia ' + provincia + '.');
-        agent.add('No dude en visitar la página web de su servicio de salud.');
-        // agent.add('Si quiere buscar la conexión que ofrecemos en otro municipio, escriba el CP.');
-        agent.add('¿Le puedo ayudar en algo más?');
-        agent.add(new Suggestion('Síntomas'));
-        agent.add(new Suggestion('Normativa'));
-        agent.add(new Suggestion('No, eso es todo'));
-    } else if (!provincia) {
-        conversacion.push('ENTRO EN 4');
-        agent.add('Lo siento, no encuentro información sobre la fase correspondiente a la provincia ' + provincia + '.');
-        agent.add('No dude en visitar la página web de su servicio de salud.');
-        agent.add('¿Le puedo ayudar con algo más?');
-        agent.add(new Suggestion('Síntomas'));
-        agent.add(new Suggestion('Normativa'));
-        agent.add(new Suggestion('No, eso es todo'));
-    }
-}
- */
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-function card (agent) {
+    agent.add('Los síntomas más comunes de la COVID-19 incluyen');
+    agent.add('- Fiebre 🤒');
+    agent.add('- Tos 🤧');
+    agent.add('- Sensación de falta de aire 😶');
+    agent.add('Otros síntomas pueden ser: disminución de olfato y del gusto, escalofríos, dolor de garganta, dolores musculares, dolor de cabeza, debilidad general, diarrea o vómitos, entre otros.');
+    agent.add(new Image(sintomasImageUrl));
     agent.add(new Card({
-            title: 'Título link',
-            buttonText: 'Título link',
-            buttonUrl: 'https://www.google.com'
+        title: 'Síntomas',
+        text: 'Síntomas COVID-19',
+        imageUrl: sintomasImageUrl,
+        buttonText: 'Síntomas COVID-19',
+        buttonUrl: sintomasImageUrl
         })
     );
-    agent.add('Blablabla.');
+}
+
+function sintomasComoActuar (agent) {
+    conversacion.push('Intent: ' + agent.intent);
+    agent.add('Si tiene síntomas, siga las instrucciones del siguiente pdf:');
+    agent.add('25/03/2020');
+    agent.add(new Card({
+            title: 'Síntomas: Cómo actuar',
+            buttonText: 'Síntomas: Cómo actuar',
+            buttonUrl: sintomasComoActuarUrl
+        })
+    );
+    agent.add('¿Sabe cuáles son los sintomas de la COVID-19? ¿En qué le puedo ayudar?');
+    agent.add(new Suggestion('Síntomas'));
+}
+
+// ----------------------------------------- MEDIDAS DE SEGURIDAD ------------------------------------------------------
+function medidasSeguridad (agent) {
+    conversacion.push('Intent: ' + agent.intent);
+    agent.add('Las medidas de seguridad que debe adoptar son...');
+    agent.add('¿En qué más le puedo ayudar?');
+    sugerenciasInicio();
+}
+
+// -------------------------------------------- SITUACIÓN ACTUAL -------------------------------------------------------
+const situacionActualUrl = 'https://cnecovid.isciii.es/covid19/';
+
+function situacionActual (agent) {
+    conversacion.push('Intent: ' + agent.intent);
+    agent.add('Si quiere conocer la situación actual en España haga click en el siguiente enlace:');
+    agent.add(new Card({
+            title: 'Situación actual',
+            buttonText: 'Situación actual',
+            buttonUrl: situacionActualUrl
+        })
+    );
+    agent.add('¿En qué más le puedo ayudar?');
+    sugerenciasInicio();
+}
+
+// --------------------------- PLAN PARA LA TRANSICIÓN A UNA NUEVA NORMALIDAD ------------------------------------------
+
+const transicionUrl = 'https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov-China/documentos/PlanTransicionNuevaNormalidad.pdf';
+const transicionFase1Url = 'https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov-China/documentos/09052020_Plan_Transicion_Guia_Fase_1.pdf';
+const transicionFase2Url = 'https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov-China/documentos/Plan_Transicion_Guia_Fase_2.pdf';
+const transicionFAQUrl = 'https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov-China/documentos/COVID19_Preguntas_y_respuestas_plan_nueva_normalidad.pdf';
+
+function fasesInformacion (agent) {
+    let nfase = agent.parameters.nfase;
+    conversacion.push('Intent: ' + agent.intent + ', fase: ' + nfase);
+    console.log('Intent: ' + agent.intent + ', fase: ' + nfase);
+    if (nfase === 1) {
+        fase1(agent);
+    } else if (nfase === 2) {
+        fase2(agent);
+    } else if (nfase === 3) {
+        // fase3(agent);
+    } else {
+        agent.add('El plan para la transición a una nueva normalidad solo incluye fases 1, 2 y 3.');
+    }
+    agent.add('¿Le puedo ayudar en algo más?');
     sugerenciasInicio(agent);
 }
 
-function setCPtrue (fakeCPtrue) {CPtrue = fakeCPtrue;}
-function setCodigoPostal (fakeCodigoPostal) {codigoPostal = fakeCodigoPostal;}
-function setProvincia (fakeProvincia) {provincia = fakeProvincia;}
+function fase1 (agent) {
+    conversacion.push('Function: Fase1');
+    agent.add('En la fase 1 puede...');
+    agent.add('No dude en plantearme una duda más concreta sobre la fase 1.');
+    agent.add('También puede hacer click en el siguiente enlace para acceder al pdf oficial:');
+    agent.add(new Card({
+            title: 'Guía de la fase 1',
+            buttonText: 'Guía de la fase 1',
+            buttonUrl: transicionFase1Url
+        })
+    );
+}
+
+function fase2 (agent) {
+    conversacion.push('Funcion: Fase2');
+    agent.add('En la fase 2 puede...');
+    agent.add('No dude en plantearme una duda más concreta sobre la fase 2.');
+    agent.add('También puede hacer click en el siguiente enlace para acceder al pdf oficial:');
+    agent.add(new Card({
+            title: 'Guía de la fase 2',
+            buttonText: 'Guía de la fase 2',
+            buttonUrl: transicionFase2Url
+        })
+    );
+}
+
+function faseCA (agent) {
+    conversacion.push('Intent: ' + agent.intent);
+    let ca = '';
+    if (agent.parameters.ccaaFase0) {
+        ca = agent.parameters.ccaaFase0;
+        agent.add('La comunidad autónoma de ' + ca + ' está en la fase 0.');
+    } else if (agent.parameters.ccaaFase01) {
+        ca = agent.parameters.ccaaFase01;
+        agent.add('En la comunidad autónoma de ' + ca + ' hay provincias que están en la fase 0 y otras que han pasado a la 1.');
+    } else if (agent.parameters.ccaaFase1) {
+        ca = agent.parameters.ccaaFase2;
+        agent.add('La comunidad autónoma de ' + ca + ' está en la fase 2.');
+    } else {
+        agent.add('¿De qué comunidad autónoma quiere saber la fase?');
+    }
+    console.log('CA : ' + ca);
+}
+
+// ---------------------------------------------- NORMATIVA ------------------------------------------------------------
+function normativa (agent) {
+    conversacion.push('Intent: ' + agent.intent);
+    agent.add('¿Qué duda tiene sobre la normativa referente al COVID-19?');
+    agent.add('Añadir sugerencias');
+}
+
+// ------------------------------------- INFORMACIÓN PARA LA CIUDADANÍA ------------------------------------------------
+// https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov-China/ciudadania.htm
+const telefonosInfoUrl = 'https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov-China/telefonos.htm';
+
+function telefonosInfo (agent) {
+    let ca = agent.parameters.ca;
+    let tlf;
+    if (ca === 'Asturias') {
+        tlf = '900 878 232'; // 984 100 400 / 112 marcando 1
+    }
+    agent.add('El teléfono de información en ' + ca + ' es ' + tlf + '.');
+    agent.add('¿Le puedo ayudar en algo más?');
+    sugerenciasInicio();
+}
+
+// -------------------------------------------------- TESTS ------------------------------------------------------------
+function setCA (fakeCA) {comunidadAutonoma = fakeCA;}
 function setFase (fakeFase) {fase = fakeFase;}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -301,9 +335,24 @@ router.post('/', (request, response) => {
 
     let intentMap = new Map();
     intentMap.set('A - Hola', hola);
+    intentMap.set('A - Explicacion', explicacion);
     intentMap.set('Fallback', fallback);
     intentMap.set('A - Gracias', gracias);
+    intentMap.set('A - Menu', menu);
     intentMap.set('A - Adios', adios);
+
+    intentMap.set('Sintomas', sintomas);
+    intentMap.set('Sintomas - Como actuar', sintomasComoActuar);
+
+    intentMap.set('Medidas seguridad', medidasSeguridad);
+
+    intentMap.set('Situacion actual', situacionActual);
+    intentMap.set('Fases - Informacion', fasesInformacion);
+    intentMap.set('Fases - CA', faseCA);
+
+    intentMap.set('Normativa', normativa);
+
+    intentMap.set('CCAA - Tlf', telefonosInfo);
 
     agent.handleRequest(intentMap);
 });
@@ -314,7 +363,5 @@ module.exports = app;
 module.exports.hola = hola;
 module.exports.adios = adios;
 
-module.exports.setCPtrue = setCPtrue;
-module.exports.setCodigoPostal = setCodigoPostal;
-module.exports.setProvincia = setProvincia;
+module.exports.setCA = setCA;
 module.exports.setFase = setFase;

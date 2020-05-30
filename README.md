@@ -44,10 +44,10 @@ The AWS CLI stores this information in a profile (a collection of settings) name
 
 You can create additional configurations that you can refer to with a name by specifying the --profile option and assigning a name. You can specify credentials from a completely different account and Region than the other profiles.
 ```
-$ aws configure --profile profilename
+$ aws configure --profile chatbotcovid
 AWS Access Key ID [None]: AKIAI44QH8DHBEXAMPLE
 AWS Secret Access Key [None]: je7MtGbClwBF/2Zp9Utk/h3yCo8nvbEXAMPLEKEY
-Default region name [None]: us-east-1
+Default region name [None]: us-west-1
 Default output format [None]: json
 ```
 Then, when you run a command, you can omit the --profile option and use the credentials and settings stored in the default profile. Or you can specify a --profile profilename and use the credentials and settings stored under that name.

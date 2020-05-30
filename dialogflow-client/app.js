@@ -18,7 +18,7 @@ async function callDialogFlow(queryText, sessionId) {
 
     // Create a new session
     const sessionClient = new dialogflow.SessionsClient();
-    const sessionPath = sessionClient.sessionPath('redytel-otyebo', sessionId);
+    const sessionPath = sessionClient.sessionPath('covid-bjncna', sessionId);
 
     // The text query request.
     const request = {

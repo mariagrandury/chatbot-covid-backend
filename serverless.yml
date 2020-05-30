@@ -26,8 +26,8 @@ functions:
         - chatbot-fulfillment/COVID.zip
         - dialogflow-client/**
         - .idea/
+        - aws/**
         - jenkins/**
-        - user-keys/**
         - .gitignore
     events:
       - http:
@@ -50,8 +50,8 @@ functions:
         - chatbot-fulfillment/COVID.zip
         - dialogflow-client/**
         - .idea/
+        - aws/**
         - jenkins/**
-        - user-keys/**
         - .gitignore
   LambdaClient:
     handler: dialogflow-client/app.handler
@@ -64,8 +64,8 @@ functions:
         - dialogflow-client/dialogflow-client.zip
         - chatbot-fulfillment/**
         - .idea/
+        - aws/**
         - jenkins/**
-        - user-keys/**
         - .gitignore
     events:
       - http:

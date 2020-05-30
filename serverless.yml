@@ -14,7 +14,7 @@ provider:
     APP_STAGE: ${self:custom.${opt:stage, self:provider.stage}_APP_STAGE}
 
 functions:
-  LambdaRedytel:
+  LambdaFulfillment:
     handler: chatbot-fulfillment/index.handler
     package:
       exclude:

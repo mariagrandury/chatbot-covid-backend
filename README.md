@@ -56,6 +56,8 @@ Caution: You can only download this JSON file once, so make sure to save the fil
 
 In this project, the keys are in **dialogflow-client/chatbotauth.json**
 
+Remember to update the project ID in **dialogflow-client/app.js**
+
 ## Setting up AWS
 To run serverless commands that interface with your AWS account, you will need to setup your AWS account credentials on your machine.
 

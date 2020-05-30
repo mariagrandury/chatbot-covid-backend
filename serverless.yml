@@ -8,6 +8,7 @@ provider:
   name: aws
   runtime: nodejs12.x
   region: ${opt:region, 'us-west-1'}
+  profile: chatbotcovid
   stackTags:
     PROJET: CHATBOT
   environment:

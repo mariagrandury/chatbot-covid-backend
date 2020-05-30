@@ -27,6 +27,35 @@ To check wich version you have installed run `serverless --version`. In this pro
 - SDK: 2.3.0
 - Components: 2.30.4
 
+## Setting up Authentication
+To set up [authentication](https://cloud.google.com/dialogflow/docs/quick/setup) with a service account:
+
+1. Click on the gear icon, to the right of the agent name.
+
+2. Under the GOOGLE PROJECT section, click on the name of the Service Account.
+
+3. Click on the menu button in the upper left hand corner and click on IAM & admin.
+
+4. Click on Service Accounts in the left hand menu.
+
+5. Click on the Create Service Account button at the top of the page.
+
+6. In the pop up, enter a name for the service account (Dialogflow Client).
+
+7. Click on Role. Under the Dialogflow category, select the desired role (client).
+
+8. Check the Furnish a new private key option and make sure JSON is selected for Key type.
+
+9. Click the Create button.
+
+10. Download of the JSON file will start. Choose a location to save it and confirm.
+
+Caution: You can only download this JSON file once, so make sure to save the file and keep it somewhere safe. If you lose this key or it becomes compromised, you can use the same process to create another.
+
+11. Once complete, you'll see a pop up with a confirmation message. Click Close.
+
+In this project, the keys are in **dialogflow-client/chatbotauth.json**
+
 ## Setting up AWS
 To run serverless commands that interface with your AWS account, you will need to setup your AWS account credentials on your machine.
 
@@ -38,7 +67,6 @@ AWS Secret Access Key [None]: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 Default region name [None]: us-west-2
 Default output format [None]: json
 ```
-The AWS Access Key ID and AWS Secret Access Key are your AWS credentials. They are associated with an AWS Identity and Access Management (IAM) user or role that determines what permissions you have.
 
 The AWS CLI stores this information in a profile (a collection of settings) named default. The information in the default profile is used any time you run an AWS CLI command that doesn't explicitly specify a profile to use.
 
@@ -51,6 +79,10 @@ Default region name [None]: us-west-1
 Default output format [None]: json
 ```
 Then, when you run a command, you can omit the --profile option and use the credentials and settings stored in the default profile. Or you can specify a --profile profilename and use the credentials and settings stored under that name.
+
+The AWS Access Key ID and AWS Secret Access Key are your AWS credentials. They are associated with an AWS Identity and Access Management (IAM) user or role that determines what permissions you have.
+
+In this project, the keys are in **aws/accessKeys.csv**
 
 ## Serverless Deployment
 When you deploy a [Service](https://www.serverless.com/framework/docs/providers/aws/guide/services/), all of the Functions, Events and Resources in your serverless.yml are translated to an AWS CloudFormation template and deployed as a single CloudFormation stack.

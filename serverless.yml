@@ -1,4 +1,4 @@
-service: Chatbot1 # Update your service name here
+service: ChatbotCOVID # Update your service name here
 package:
   individually: true
 custom:
@@ -7,7 +7,7 @@ custom:
 provider:
   name: aws
   runtime: nodejs12.x
-  region: ${opt:region, 'us-east-2'}
+  region: ${opt:region, 'us-west-1'}
   stackTags:
     PROJET: CHATBOT
   environment:
@@ -47,7 +47,6 @@ functions:
         - chatbot-fulfillment/index.js
         - chatbot-fulfillment/package.json
         - chatbot-fulfillment/package-lock.json
-        - chatbot-fulfillment/pueblosLeon.xlsx
         - chatbot-fulfillment/COVID.zip
         - dialogflow-client/**
         - .idea/

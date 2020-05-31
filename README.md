@@ -54,9 +54,9 @@ Caution: You can only download this JSON file once, so make sure to save the fil
 
 11. Once complete, you'll see a pop up with a confirmation message. Click Close.
 
-In this project, the keys are in **dialogflow-client/chatbotauth.json**
+In this project, the keys are in **dialogflow-client/chatbotauth.json**.
 
-Remember to update the project ID in **dialogflow-client/app.js**
+Remember to update the project ID in **dialogflow-client/app.js**.
 
 ## Setting up AWS
 To run serverless commands that interface with your AWS account, you will need to setup your AWS account credentials on your machine.
@@ -84,7 +84,7 @@ Then, when you run a command, you can omit the --profile option and use the cred
 
 The AWS Access Key ID and AWS Secret Access Key are your AWS credentials. They are associated with an AWS Identity and Access Management (IAM) user or role that determines what permissions you have.
 
-In this project, the keys are in **aws/accessKeys.csv**
+In this project, the keys are in **aws/accessKeys.csv**.
 
 ## Serverless Deployment
 When you deploy a [Service](https://www.serverless.com/framework/docs/providers/aws/guide/services/), all of the Functions, Events and Resources in your serverless.yml are translated to an AWS CloudFormation template and deployed as a single CloudFormation stack.
@@ -97,6 +97,11 @@ Then use the deploy command
 ```
 serverless deploy
 ```
+You can specify the profile which should be used via the aws-profile option like this:
+```
+serverless deploy --aws-profile chatbotcovid
+```
+To specify a default profile to use, you can add a profile setting to your provider configuration in **serverless.yml**.
 
 ## Create AWS Lambda's from scratch
 To start developing the backend Lambdas (using the Dialogflow frontend) you can create the lambda functions [from scratch](https://medium.com/faun/building-chatbot-with-google-dialogflow-with-aws-lambda-e19872e1589).

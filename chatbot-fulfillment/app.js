@@ -19,7 +19,7 @@ let onInit = true;
 
 let provincia;
 let comunidadAutonoma;
-let fase;
+let faseCliente = 1;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -29,6 +29,7 @@ function hola(agent) {
         provincia = agent.parameters.provincia;
         agent.add('Perfecto, muchas gracias.');
         agent.add('Le puedo explicar cómo interactuar conmigo si todavía no me conoce.');
+        agent.add(new Suggestion('Explícame'));
         agent.add(new Suggestion('Explícame'));
         onInit = false;
         sugerenciasInicio(agent);
@@ -158,7 +159,10 @@ function medidasTrabajo (agent) {
 
 function medidasHigiene (agent) {
     conversacion.push('Intent: ' + agent.intent);
-    agent.add('Las medidas de higiene y prevención son...');
+    agent.add('Las medidas de seguridad e higiene establecidas por las autoridades sanitarias:'); // pdf fase 1
+    agent.add('- Distancia de seguridad de 2m.');
+    agent.add('- Higiene de manos');
+    agent.add('- Etiqueta respiratoria');
     sugerenciasInicio(agent);
 }
 
@@ -184,6 +188,15 @@ const transicionUrl = 'https://www.mscbs.gob.es/profesionales/saludPublica/ccaye
 const transicionFase1Url = 'https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov-China/documentos/09052020_Plan_Transicion_Guia_Fase_1.pdf';
 const transicionFase2Url = 'https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov-China/documentos/Plan_Transicion_Guia_Fase_2.pdf';
 const transicionFAQUrl = 'https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov-China/documentos/COVID19_Preguntas_y_respuestas_plan_nueva_normalidad.pdf';
+
+function fases (agent) {
+    agent.add('Usted se encuentra en la fase ... ');
+    agent.add('¿Quiere que le informe sobre su fase u otra?');
+    agent.add(new Suggestion('Fase 1'));
+    agent.add(new Suggestion('Información sobre la fase 1'));
+    agent.add(new Suggestion('Fase 2'));
+    agent.add(new Suggestion('Información sobre la fase 2'));
+}
 
 function fasesInformacion (agent) {
     let nfase = agent.parameters.nfase;
@@ -215,7 +228,35 @@ function fase1 (agent) {
             buttonUrl: transicionFase1Url
         })
     );
+    sugerenciasFases(agent, 1);
+}
 
+function fase2 (agent) {
+    conversacion.push('Funcion: Fase2');
+    agent.add('En la fase 2 está permitido:');
+    agent.add('- Circular por su provincia o isla en grupos de hasta 15 personas.');
+    agent.add('- Apertura de locales y establecimientos minoristas con un aforo máximo del 40%.');
+    agent.add('- Apertura de establecimientos de hostelería y restauración para consumo en el local, con un aforo máximo del 40%.');
+    agent.add('No dude en plantearme una duda más concreta sobre la fase 2 o elegir una de las categorías sugeridas.');
+    agent.add('También puede hacer click en el siguiente enlace para acceder al pdf oficial:');
+    agent.add(new Card({
+            title: 'Guía de la fase 2',
+            buttonText: 'Guía de la fase 2',
+            buttonUrl: transicionFase2Url
+        })
+    );
+    sugerenciasFases(agent, 2);
+}
+
+function sugerenciasFases(agent, fase) {
+    if (fase === 1) {
+        sugerenciasFase1(agent);
+    } else if (fase === 2) {
+        sugerenciasFase2(agent);
+    }
+}
+
+function sugerenciasFase1 (agent) {
     agent.add(new Suggestion('😄🚗'));
     agent.add(new Suggestion('Medidas sociales'));
     agent.add(new Suggestion('👕🛍️💲💰'));
@@ -234,20 +275,7 @@ function fase1 (agent) {
     agent.add(new Suggestion('Hoteles y establecimientos turísticos'));
 }
 
-function fase2 (agent) {
-    conversacion.push('Funcion: Fase2');
-    agent.add('En la fase 2 está permitido:');
-    agent.add('- Circular por su provincia o isla en grupos de hasta 15 personas.');
-    agent.add('- Apertura de locales y establecimientos minoristas con un aforo máximo del 40%.');
-    agent.add('- Apertura de establecimientos de hostelería y restauración para consumo en el local, con un aforo máximo del 40%.');
-    agent.add('No dude en plantearme una duda más concreta sobre la fase 2 o elegir una de las categorías sugeridas.');
-    agent.add('También puede hacer click en el siguiente enlace para acceder al pdf oficial:');
-    agent.add(new Card({
-            title: 'Guía de la fase 2',
-            buttonText: 'Guía de la fase 2',
-            buttonUrl: transicionFase2Url
-        })
-    );
+function sugerenciasFase2 (agent) {
     agent.add(new Suggestion('😄🚗'));
     agent.add(new Suggestion('Medidas sociales'));
     agent.add(new Suggestion('👕🛍️💲💰'));
@@ -284,6 +312,63 @@ function faseCA (agent) {
     console.log('CA : ' + ca);
 }
 
+// ---------------------------------------------------------------------------------------------------------------------
+
+function medidasSociales (agent) {
+    console.log('Intent: ' + agent.intent);
+    let fase;
+    if (agent.parameters.nfase) {
+        fase = agent.parameters.nfase;
+        console.log('nfase: ' + fase);
+    } else if (faseCliente) {
+        fase = faseCliente;
+        console.log('faseCliente: ' + fase);
+    }
+    agent.add('En la fase ' + fase + ':');
+    circulacion(agent, fase);
+    velatorios(agent, fase);
+    culto(agent);
+    agent.add('- Recuerde respetar siempre las medidas de seguridad e higiene establecidas');
+    agent.add('¿Tiene más dudas referentes a la fase ' + fase + '?');
+    sugerenciasFases(agent, fase);
+}
+function circulacion (agent, fase = 0) {
+    if (fase === 0) {
+        if (agent.parameters.nfase) {
+            fase = agent.parameters.nfase;
+        } else if (faseCliente) {
+            fase = faseCliente;
+        }
+    }
+    if (fase === 1) { agent.add('- Puede circular por su provincia o isla en grupos de máximo 10 personas.');}
+    if (fase === 2) {
+        agent.add('- Puede circular por su provincia o isla en grupos de máximo 15 personas.');
+        agent.add('- Las personas de hasta 70 años podrán realizar actividad\n' +
+        'física no profesional en cualquier franja horaria excepto entre\n' +
+        'las 10:00 y 12:00 horas y entre las 19:00 y 20:00 horas.')}
+}
+function velatorios (agent, fase = 0) {
+    if (fase === 0) {
+        if (agent.parameters.nfase) {
+            fase = agent.parameters.nfase;
+        } else if (faseCliente) {
+            fase = faseCliente;
+        }
+    }
+    if (fase === 1) {
+        agent.add('- Pueden realizarse velatorios con un límite de 15 personas en espacios abiertos y 10 en cerrados.');
+        agent.add('- La comitiva para la despedida de la persona fallecida se restringe a un máximo de 15 personas.')
+    }
+    if (fase === 2) {
+        agent.add('- Pueden realizarse velatorios con un límite de 25 personas en espacios abiertos y 15 en cerrados.');
+        agent.add('- La comitiva para la despedida de la persona fallecida se restringe a un máximo de 25 personas')
+    }
+}
+function culto (agent) {
+    agent.add('- Puede asistir a lugares de culto siempre que no se supere un tercio de su aforo.');
+    agent.add('- El aforo máximo deberá publicarse en lugar visible del espacio destinado al culto. ');
+}
+
 // ------------------------------------- INFORMACIÓN PARA LA CIUDADANÍA ------------------------------------------------
 // https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov-China/ciudadania.htm
 const telefonosInfoUrl = 'https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov-China/telefonos.htm';
@@ -310,7 +395,7 @@ const ministeriorTrabajoUrl = 'https://www.sepe.es/HomeSepe/COVID-19.html';
 
 // -------------------------------------------------- TESTS ------------------------------------------------------------
 function setCA (fakeCA) {comunidadAutonoma = fakeCA;}
-function setFase (fakeFase) {fase = fakeFase;}
+function setFase (fakeFase) {faseCliente = fakeFase;}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -393,6 +478,7 @@ router.post('/', (request, response) => {
 
     let intentMap = new Map();
     intentMap.set('A - Hola', hola);
+    intentMap.set('A - Provincia', hola);
     intentMap.set('A - Explicacion', explicacion);
     intentMap.set('Fallback', fallback);
     intentMap.set('A - Gracias', gracias);
@@ -403,11 +489,17 @@ router.post('/', (request, response) => {
     intentMap.set('Sintomas - Como actuar', sintomasComoActuar);
 
     intentMap.set('Medidas seguridad', medidasSeguridad);
+    intentMap.set('Medidas seguridad - Trabajo', medidasTrabajo);
 
     intentMap.set('Situacion actual', situacionActual);
+    intentMap.set('Fases', fases);
     intentMap.set('Fases - Informacion', fasesInformacion);
     intentMap.set('Fases - CA', faseCA);
-    intentMap.set('Medidas trabajo', medidasTrabajo);
+
+    intentMap.set('Medidas sociales', medidasSociales);
+    intentMap.set('Circulacion', circulacion);
+    intentMap.set('Velatorios', velatorios);
+    intentMap.set('Culto', culto);
 
     intentMap.set('CCAA - Tlf', telefonosInfo);
 

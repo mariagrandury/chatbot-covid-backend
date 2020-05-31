@@ -52,9 +52,12 @@ function explicacion(agent) {
 }
 
 function sugerenciasInicio(agent) {
-    agent.add(new Suggestion ('Síntomas'));
-    agent.add(new Suggestion ('Fases'));
-    agent.add(new Suggestion ('Medidas seguridad'));
+    agent.add(new Suggestion('Síntomas'));
+    agent.add(new Suggestion('Síntomas del COVID-19'));
+    agent.add(new Suggestion('Fases'));
+    agent.add(new Suggestion('Fases de la desescalada'));
+    agent.add(new Suggestion('Medidas'));
+    agent.add(new Suggestion('Medidas de seguridad'));
     if (agent.intent !== 'A - Hola') {
         agent.add(new Suggestion('No, eso es todo'));
     }
@@ -116,8 +119,11 @@ function sintomas (agent) {
     agent.add('Otros síntomas pueden ser: disminución de olfato y del gusto, escalofríos, dolor de garganta, dolores musculares, dolor de cabeza, debilidad general, diarrea o vómitos, entre otros.');
     agent.add('¿Sabe cómo actuar si presenta síntomas? ¿Le puedo ayudar en algo más?');
     agent.add(new Suggestion('Cómo actuar'));
+    agent.add(new Suggestion('Cómo actuar'));
     agent.add(new Suggestion('Fases'));
-    agent.add(new Suggestion('Medidas seguridad'));
+    agent.add(new Suggestion('Fases de la desescalada'));
+    agent.add(new Suggestion('Medidas'));
+    agent.add(new Suggestion('Medidas de seguridad'));
 }
 
 function sintomasComoActuar (agent) {
@@ -137,8 +143,23 @@ function sintomasComoActuar (agent) {
 function medidasSeguridad (agent) {
     conversacion.push('Intent: ' + agent.intent);
     agent.add('Las medidas de seguridad que debe adoptar son...');
-    agent.add('¿En qué más le puedo ayudar?');
-    sugerenciasInicio();
+    agent.add('¿Sobre qué medidas quiere que le informe en particular?');
+    agent.add(new Suggestion('💻 💼')); // Medidas en el trabajo
+    agent.add(new Suggestion('Medidas en el trabajo'));
+    agent.add(new Suggestion('👩‍⚕️ 🧼 📏')); // Medidas de higiene y prevención
+    agent.add(new Suggestion('Medidas de higiene y prevención'));
+}
+
+function medidasTrabajo (agent) {
+    conversacion.push('Intent: ' + agent.intent);
+    agent.add('Las medidas en el trabajo son...');
+    sugerenciasInicio(agent);
+}
+
+function medidasHigiene (agent) {
+    conversacion.push('Intent: ' + agent.intent);
+    agent.add('Las medidas de higiene y prevención son...');
+    sugerenciasInicio(agent);
 }
 
 // -------------------------------------------- SITUACIÓN ACTUAL -------------------------------------------------------
@@ -194,15 +215,23 @@ function fase1 (agent) {
             buttonUrl: transicionFase1Url
         })
     );
-    agent.add(new Suggestion('Trabajo'));
-    agent.add(new Suggestion('Social'));
-    agent.add(new Suggestion('Comercio'));
+
+    agent.add(new Suggestion('😄🚗'));
+    agent.add(new Suggestion('Medidas sociales'));
+    agent.add(new Suggestion('👕🛍️💲💰'));
+    agent.add(new Suggestion('Comercio y prestación de servicios'));
+    agent.add(new Suggestion('👩‍🍳 🍴 ☕️'));
     agent.add(new Suggestion('Hostelería y restauración'));
+    agent.add(new Suggestion('👩‍🦳👴'));
     agent.add(new Suggestion('Servicios sociales'));
+    agent.add(new Suggestion('📚 🎓'));
     agent.add(new Suggestion('Educación'));
-    agent.add(new Suggestion('Cultura'));
-    agent.add(new Suggestion('Deporte'));
-    agent.add(new Suggestion('Turismo'));
+    agent.add(new Suggestion('🎭 🎨 💃 🎷'));
+    agent.add(new Suggestion('Actividades culturales'));
+    agent.add(new Suggestion('🏀🏐🏉'));
+    agent.add(new Suggestion('Actividades deportivas'));
+    agent.add(new Suggestion('🛏️ 🛎️ 🏨 '));
+    agent.add(new Suggestion('Hoteles y establecimientos turísticos'));
 }
 
 function fase2 (agent) {
@@ -219,21 +248,22 @@ function fase2 (agent) {
             buttonUrl: transicionFase2Url
         })
     );
-    agent.add(new Suggestion('💻 💼')); // Medidas en el trabajo
-    agent.add(new Suggestion('👩‍⚕️ 🧼 📏')); // Medidas de higiene y prevención
-    agent.add(new Suggestion('😄🚗')); // Medidas sociales
-    agent.add(new Suggestion('👕🛍️💲💰')); // Comercio y prestación de servicios
-    agent.add(new Suggestion('👩‍🍳 🍴 ☕️')); // Hostelería y restauración
-    agent.add(new Suggestion('👩‍🦳👴')); // Servicios sociales
-    agent.add(new Suggestion('🎭 🎨 💃 🎷')); // Actividades culturales
-    agent.add(new Suggestion('🏀🏐🏉')); // Actividades deportivas
-    agent.add(new Suggestion('🛏️ 🛎️ 🏨 ')); // Hoteles y establecimientos turísticos
-    agent.add(new Suggestion('🏊‍♀️ 🌅 ☀️')); // Piscinas y playas
-}
-
-function medidasTrabajo (agent) {
-    conversacion.push('Intent: ' + agent.intent);
-    agent.add('Las medidas en el trabajo son...');
+    agent.add(new Suggestion('😄🚗'));
+    agent.add(new Suggestion('Medidas sociales'));
+    agent.add(new Suggestion('👕🛍️💲💰'));
+    agent.add(new Suggestion('Comercio y prestación de servicios'));
+    agent.add(new Suggestion('👩‍🍳 🍴 ☕️'));
+    agent.add(new Suggestion('Hostelería y restauración'));
+    agent.add(new Suggestion('👩‍🦳👴'));
+    agent.add(new Suggestion('Servicios sociales'));
+    agent.add(new Suggestion('🎭 🎨 💃 🎷'));
+    agent.add(new Suggestion('Actividades culturales'));
+    agent.add(new Suggestion('🏀🏐🏉'));
+    agent.add(new Suggestion('Actividades deportivas'));
+    agent.add(new Suggestion('🛏️ 🛎️ 🏨 '));
+    agent.add(new Suggestion('Hoteles y establecimientos turísticos'));
+    agent.add(new Suggestion('🏊‍♀️ 🌅 ☀️'));
+    agent.add(new Suggestion('Piscinas y playas'));
 }
 
 function faseCA (agent) {

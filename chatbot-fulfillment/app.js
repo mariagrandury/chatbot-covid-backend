@@ -162,7 +162,9 @@ function medidasSeguridad (agent) {
     agent.add(new Suggestion('Medidas en el trabajo'));
     agent.add(new Suggestion('🍴 ☕'));
     agent.add(new Suggestion('Medidas en hostelería'));
-}
+    agent.add(new Suggestion('📚 🎨 '));
+    agent.add(new Suggestion('Medidas en centros culturales'));
+} // TODO medidas cultura + deporte
 
 function medidasHigiene(agent) {
     console.log('CONVERSACION Intent: ' + agent.intent);
@@ -201,6 +203,20 @@ function medidasHosteleria(agent) {
     agent.add('- Eliminar productos de autoservicio como servilleteros y priorizar monodosis desechables.');
     agent.add('¿Le puedo ayudar con algo más?');
     sugerenciasInicio(agent);
+}
+
+function medidasCentrosCulturales(agent) {
+    console.log('CONVERSACION Intent: ' + agent.intent);
+    agent.add('Las medidas que se deben respetar para el acceso a bibliotecas, salas de exposiciones y monumentos son:');
+    agent.add('- Instalar barreras físicas de protección en mostradores de información y atención al público.');
+    agent.add('- Instalar carteles con normas y recomendaciones específicas para el público.');
+    agent.add('- Instalar vinilos de señalización con indicaciones sobre la distancia de seguridad, para evitar que se formen colas o aglomeraciones en la entrada y/o salida.');
+    agent.add('- Limpiar y desinfectar los inmuebles antes de la reapertura.');
+    agent.add('- No ofrecer servicios complementarios, tales como tiendas, cafetería, guardarropa o consigna.'); // Fase 1, cultura + Fase 2, cultura
+    agent.add('En los casos aplicables:');
+    agent.add('- Guardar en un lugar apartado y separadas entre sí durante al menos 14 días las obras consultadas.'); // Fase 1, cultura, bibliotecas
+    agent.add('- Excluir de la visita pública los lugares donde no pueda garantizarse la seguridad de los visitantes.');
+    agent.add('- Inhabilitar el uso de elementos expuestos diseñados para un uso táctil por el visitante, así como las audioguías y folletos');
 }
 
 // -------------------------------------------- SITUACIÓN ACTUAL -------------------------------------------------------
@@ -346,8 +362,6 @@ function medidasSociales (agent) {
     culto(agent, fase);
     if (fase === 2) {
         bodas(agent, fase);
-        turismoActivo(agent, fase);
-        congresos(agent, fases);
     }
     agent.add('Recuerde respetar siempre las medidas de seguridad e higiene establecidas');
     agent.add('¿Tiene más dudas referentes a la fase ' + fase + '?');
@@ -402,18 +416,7 @@ function bodas (agent, fase = 0) {
     agent.add('- Las ceremonias nupciales podrán realizarse en todo tipo de instalaciones, siempre que no se supere el 50% de su aforo.');
     agent.add('- Podrán asistir un máximo de 100 personas en espacios al aire libre o de 50 personas en espacios cerrados.');
 }
-function turismoActivo (agent, fase = 0) {
-    if (fase === 0) {
-        agent.add('A partir de la fase 2:');
-    }
-    agent.add('- Se podrán a realizar actividades de turismo activo y de naturaleza en grupos de hasta 20 personas, debiendo concertarse estas actividades preferentemente mediante cita previa.')
-}
-function congresos(agent, fase = 0) {
-    if (fase === 0) {
-        agent.add('A partir de la fase 2:');
-    }
-    agent.add('- Se permitirá la realización de congresos, encuentros, reuniones de negocio y conferencias promovidos por cualesquiera entidades de naturaleza pública o privada. ');
-}
+
 
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -433,7 +436,6 @@ function comercio(agent) {
     mercadillos(agent, fase);
     if (fase === 2) {
         centrosComerciales(agent, fase);
-        centrosFormacion(agent, fase);
     }
     agent.add('Recuerde respetar siempre las medidas de seguridad e higiene establecidas');
     agent.add('¿Tiene más dudas referentes a la fase ' + fase + '?');
@@ -484,14 +486,6 @@ function centrosComerciales(agent, fase = 0) {
         agent.add('A partir de la fase 2, se permite la reapertura de:');
     }
     agent.add('- Centros y parques comerciales, limitando el aforo al 30% en las zonas comunes y al 40% en cada establecimiento. ');
-}
-function centrosFormacion(agent, fase = 0) {
-    console.log('CONVERSACION Intent: ' + agent.intent);
-    if (fase === 0) {
-        agent.add('A partir de la fase 2, se permite la reapertura de:');
-    }
-    agent.add('- Centros educativos no universitarios y de formación. ');
-    agent.add('- Academias y autoescuelas, limitando su aforo a 1/3 y priorizando la formación online. ');
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -577,7 +571,60 @@ function educacion(agent) {
         console.log('CONVERSACION faseCliente: ' + fase);
     }
     agent.add('En la fase ' + fase + ', se permite:');
-    agent.add('Educación...');
+    bibliotecas(agent, fase);
+    laboratorios(agent, fase);
+    congresos(agent, fase);
+    centrosFormacion(agent, fase);
+}
+function bibliotecas(agent, fase) {
+    console.log('CONVERSACION Intent: ' + agent.intent);
+    if (fase === 0) {
+        if (agent.parameters.nfase) {
+            fase = agent.parameters.nfase;
+        } else if (faseCliente) {
+            fase = faseCliente;
+        }
+        agent.add('En la fase ' + fase + ', se permite la reapertura de:');
+    }
+    if (fase === 1) {
+        agent.add('- Bibliotecas públicas y privadas para préstamo y devolución de obras, así como para lectura en sala con una reducción del aforo al 30%.');
+        agent.add('- No pueden llevarse a cabo actividades culturales ni hacer uso de los ordenadores y medios informáticos.');
+    } else if (fase === 2) {
+        agent.add('- Bibliotecas públicas y privadas para préstamo y devolución de obras, así como para lectura en sala con una reducción del aforo al 30%.');
+        agent.add('- Se puede hacer uso de los ordenadores y medio informáticos, los cuales deben limpiarse tras cada uso.');
+        agent.add('- Las salas infantiles y las colecciones de libre acceso permanecen cerradas.');
+    }
+}
+function laboratorios(agent, fase = 0) {
+    console.log('CONVERSACION Intent: ' + agent.intent);
+    if (fase === 0) {
+        agent.add('Desde la fase 1, se permite la reapertura de:');
+    }
+    agent.add('- Laboratorios universitarios y entidades de naturaleza pública y privada que desarrollen o den soporte a actividades de investigación científica y técnica, desarrollo e innovación en todos los campos de la economía y de la sociedad.');
+}
+function congresos(agent, fase = 0) {
+    console.log('CONVERSACION Intent: ' + agent.intent);
+    if (fase === 0) {
+        if (agent.parameters.nfase) {
+            fase = agent.parameters.nfase;
+        } else if (faseCliente) {
+            fase = faseCliente;
+        }
+        agent.add('En la fase ' + fase + ', se permite la realización de:');
+    }
+    if (fase === 1) { // Cultura fase 1
+        agent.add('- Congresos, encuentros, eventos y seminarios con un máximo de 30 asistentes y manteniendo la distancia física de dos metros. Deberá fomentarse la participación no presencial.');
+    } else if (fase === 2) {// Medidas sociales fase 2
+        agent.add('- Congresos, encuentros, reuniones de negocio y conferencias promovidos por cualesquiera entidades de naturaleza pública o privada. ');
+    }
+}
+function centrosFormacion(agent, fase = 0) {
+    console.log('CONVERSACION Intent: ' + agent.intent);
+    if (fase === 0) {
+        agent.add('A partir de la fase 2, se permite la reapertura de:');
+    }
+    agent.add('- Centros educativos no universitarios y de formación. ');
+    agent.add('- Academias y autoescuelas, limitando su aforo a 1/3 y priorizando la formación online. ');
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -593,7 +640,44 @@ function cultura(agent) {
         console.log('CONVERSACION faseCliente: ' + fase);
     }
     agent.add('En la fase ' + fase + ', se permite:');
-    agent.add('Cultura...');
+    museos(agent, fase);
+    espectaculos(agent, fase);
+}
+function museos(agent, fase = 0) {
+    console.log('CONVERSACION Intent: ' + agent.intent);
+    if (fase === 0) {
+        if (agent.parameters.nfase) {
+            fase = agent.parameters.nfase;
+        } else if (faseCliente) {
+            fase = faseCliente;
+        }
+        agent.add('En la fase ' + fase + ', se permite la reapertura de:');
+    }
+    if (fase === 1) {
+        agent.add('- Museos a 1/3 de su aforo. Tenga en cuenta que los recorridos podrían estar alterados por medidas de seguridad.');
+    } else if (fase === 2) {
+        agent.add('- Salas de exposiciones ');
+        agent.add('- Monumentos: únicamente se permiten visitas');
+        agent.add('En estos espacios no se superará 1/3 del aforo y se deben adoptar las medidas necesarias para el debido control de las aglomeraciones.');
+    }
+}
+function espectaculos(agent, fase = 0) {
+    console.log('CONVERSACION Intent: ' + agent.intent);
+    if (fase === 0) {
+        if (agent.parameters.nfase) {
+            fase = agent.parameters.nfase;
+        } else if (faseCliente) {
+            fase = faseCliente;
+        }
+        agent.add('En la fase ' + fase + ', se permite la reapertura de:');
+    }
+    if (fase === 1) {
+        agent.add(' - Locales y establecimientos para actos y espectáculos culturales. El aforo máximo es de 30 personas en lugares cerrados y 200 personas al aire libre.');
+    } else if (fase === 2) {
+        agent.add('- Locales y establecimientos para actos y espectáculos culturales. El aforo máximo es de 50 personas en lugares cerrados y 400 personas al aire libre.');
+        agent.add('- Cines, teatro y auditorios siempre que cuenten con butacas preasignadas y no se supere 1/3 del aforo.');
+        agent.add('Recuerde comprar online su entrada si es posible.')
+    }
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -608,8 +692,67 @@ function deporte(agent) {
         fase = faseCliente;
         console.log('CONVERSACION faseCliente: ' + fase);
     }
-    agent.add('En la fase ' + fase + ', se permite:');
-    agent.add('Deporte...');
+    agent.add('En la fase ' + fase + ', se permite la reapertura de:');
+    if (fase === 1) {
+        agent.add('- Centros de Alto Rendimiento');
+        agent.add('- Instalaciones deportivas al aire libre');
+        agent.add('- Centros deportivos para la práctica de deportiva individual y el entrenamiento medio en ligas profesionales');
+    } else if (fase === 2) {
+        entrenamiento(agent, fase);
+        competicion(agent, fase);
+        instalacionesCubiertas(agent, fase);
+        piscinasDeportivas(agent, fase);
+    }
+    turismoActivo(agent, fase);
+}
+function entrenamiento(agent, fase = 0) {
+    console.log('CONVERSACION Intent: ' + agent.intent);
+    if (fase === 0) {
+        agent.add('A partir de la fase 2 se permite la reanudación de:');
+    }
+    agent.add('- Entrenamientos de deportistas profesionales y no profesionales, de manera individual.');
+    agent.add('- Entrenamientos dirigidos a la fase previa de la competición en grupos de hasta 14 personas.');
+    agent.add('- Reuniones técnicas de trabajo en grupos de hasta 15 personas, incluyendo al técnico.');
+    agent.add('En la medida de lo posible, no se debe compartir ningún material de uso individual.');
+    agent.add('Pueden acceder a las instalaciones (incluyendo vestuarios) deportistas, personal técnico y árbitros.');
+    agent.add('Los medios de comunicación no pueden asistir a las sesiones de entrenamiento.');
+}
+function competicion(agent, fase = 0) {
+    console.log('CONVERSACION Intent: ' + agent.intent);
+    if (fase === 0) {
+        agent.add('A partir de la fase 2 se permite la reanudación de:');
+    }
+    agent.add('- Competiciones de las Ligas Profesionales, sin público y a puerta cerrada.');
+    agent.add('Se permite la entrada de medios de comunicación para la retransmisión de la competición.');
+    agent.add('El Consejo Superior de Deportes determinará el número de personas que pueden acceder al estadio antes del inicio de la competición.');
+}
+function instalacionesCubiertas(agent, fase = 0) {
+    console.log('CONVERSACION Intent: ' + agent.intent);
+    if (fase === 0) {
+        agent.add('A partir de la fase 2 se permite la reapertura de:');
+    }
+    agent.add('- Instalaciones cubiertas, en las que se podrán reanudar competiciones sin público y a puerta cerrada');
+    agent.add('Se permite el acceso únicamente a deportistas de alto nivel, de alto rendimiento, profesionales, federados, árbitros o jueces y personal técnico federado.');
+    agent.add('El límite del aforo es un 30% y se requiere concertar cita previa.');
+}
+function piscinasDeportivas(agent, fase = 0) {
+    console.log('CONVERSACION Intent: ' + agent.intent);
+    if (fase === 0) {
+        agent.add('A partir de la fase 2 se permite la reapertura de:');
+    }
+    agent.add('- Piscinas al aire libre o cubiertas para la realización de actividades deportivas.');
+    agent.add('- Los vestuarios correspondientes.');
+    agent.add('El aforo máximo es del 30% y se debe pedir cita previa.');
+    agent.add('Tenga en cuenta que tienen acceso preferente los deportistas federados en especialidades que se desarrollen en el medio acuático.');
+    agent.add('Solo puede acceder con el deportista un entrenador en caso de ser necesario y estar acreditado.');
+}
+
+function turismoActivo (agent, fase = 0) {
+    console.log('CONVERSACION Intent: ' + agent.intent);
+    if (fase === 0) {
+        agent.add('A partir de la fase 2:');
+    }
+    agent.add('- Se podrán a realizar actividades de turismo activo y de naturaleza en grupos de hasta 20 personas, debiendo concertarse estas actividades preferentemente mediante cita previa.')
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -766,6 +909,7 @@ router.post('/', (request, response) => {
     intentMap.set('Medidas seguridad - Trabajo', medidasTrabajo);
     intentMap.set('Medidas seguridad - Higiene', medidasHigiene);
     intentMap.set('Medidas seguridad - Hosteleria', medidasHosteleria);
+    intentMap.set('Medidas seguridad - Centros culturales', medidasCentrosCulturales);
 
     intentMap.set('Situacion actual', situacionActual);
     intentMap.set('Fases', fases);

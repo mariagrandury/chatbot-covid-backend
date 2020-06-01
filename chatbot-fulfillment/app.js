@@ -153,7 +153,7 @@ function sintomasComoActuar (agent) {
 }
 
 // ----------------------------------------- MEDIDAS DE SEGURIDAD ------------------------------------------------------
-function medidasSeguridad (agent) { // TODO que el chatbot entienda los emojis
+function medidasSeguridad (agent) {
     console.log('CONVERSACION Intent: ' + agent.intent);
     agent.add('¿Sobre qué medidas quiere que le informe en particular?');
     agent.add(new Suggestion('🧼 📏'));
@@ -230,9 +230,9 @@ function fases (agent) {
     console.log('CONVERSACION Intent: ' + agent.intent);
     agent.add('Usted se encuentra en la fase ... '); // TODO fase del cliente
     agent.add('¿Quiere que le informe sobre su fase u otra?');
-    agent.add(new Suggestion('Fase 1'));
+    agent.add(new Suggestion('Fase 1️⃣'));
     agent.add(new Suggestion('Información sobre la fase 1'));
-    agent.add(new Suggestion('Fase 2'));
+    agent.add(new Suggestion('Fase 2️⃣'));
     agent.add(new Suggestion('Información sobre la fase 2'));
 }
 
@@ -286,7 +286,7 @@ function fase2 (agent) {
 }
 
 function sugerenciasFases(agent, fase) { // TODO seleccionar emojis
-    agent.add(new Suggestion('😄🚗'));
+    agent.add(new Suggestion('🚗🙏'));
     agent.add(new Suggestion('Medidas sociales'));
     agent.add(new Suggestion('👕🛍️💲💰'));
     agent.add(new Suggestion('Comercio y prestación de servicios'));
@@ -298,7 +298,7 @@ function sugerenciasFases(agent, fase) { // TODO seleccionar emojis
     agent.add(new Suggestion('Educación'));
     agent.add(new Suggestion('🎭 🎨 💃 🎷'));
     agent.add(new Suggestion('Actividades culturales'));
-    agent.add(new Suggestion('🏀🏐🏉'));
+    agent.add(new Suggestion('🏀🏐🏉🎾🏓'));
     agent.add(new Suggestion('Actividades deportivas'));
     agent.add(new Suggestion('🛏️ 🛎️ 🏨 '));
     agent.add(new Suggestion('Hoteles y establecimientos turísticos'));
@@ -536,6 +536,115 @@ function discotecas(agent) {
     agent.add('Todavía no se permite la apertura de discotecas y bares de ocio nocturno.');
 }
 
+// ---------------------------------------------------------------------------------------------------------------------
+
+function serviciosSociales(agent) {
+    console.log('CONVERSACION Intent: ' + agent.intent);
+    let fase;
+    if (agent.parameters.nfase) {
+        fase = agent.parameters.nfase;
+        console.log('CONVERSACION nfase: ' + fase);
+    } else if (faseCliente) {
+        fase = faseCliente;
+        console.log('CONVERSACION faseCliente: ' + fase);
+    }
+    agent.add('En la fase ' + fase + ', se permite:');
+    if (fase === 1) {
+        agent.add('- La apertura de todos los centros recogidos en el\n' +
+            'Catálogo de Referencia de Servicios Sociales. ');
+        agent.add('El objetivo es que se pueda llevar a cabo la atención\n' +
+            'presencial de aquellos ciudadanos que lo necesiten,\n' +
+            'prestando especial atención a los servicios de terapia,\n' +
+            'rehabilitación, atención temprana y atención diurna para\n' +
+            'personas con discapacidad y/o en situación de dependencia.');
+    }
+    if (fase === 2) {
+        agent.add('- La realización de visitas a los residentes de viviendas tuteladas, centros residenciales de personas con discapacidad y centros residenciales de personas mayores. ');
+        agent.add('Recuerde cumplir con las normas establecidas por su Comunidad Autónoma y concertar previamente la visita con la vivienda tutelada o el centro residencial.');
+    }
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+
+function educacion(agent) {
+    console.log('CONVERSACION Intent: ' + agent.intent);
+    let fase;
+    if (agent.parameters.nfase) {
+        fase = agent.parameters.nfase;
+        console.log('CONVERSACION nfase: ' + fase);
+    } else if (faseCliente) {
+        fase = faseCliente;
+        console.log('CONVERSACION faseCliente: ' + fase);
+    }
+    agent.add('En la fase ' + fase + ', se permite:');
+    agent.add('Educación...');
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+
+function cultura(agent) {
+    console.log('CONVERSACION Intent: ' + agent.intent);
+    let fase;
+    if (agent.parameters.nfase) {
+        fase = agent.parameters.nfase;
+        console.log('CONVERSACION nfase: ' + fase);
+    } else if (faseCliente) {
+        fase = faseCliente;
+        console.log('CONVERSACION faseCliente: ' + fase);
+    }
+    agent.add('En la fase ' + fase + ', se permite:');
+    agent.add('Cultura...');
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+
+function deporte(agent) {
+    console.log('CONVERSACION Intent: ' + agent.intent);
+    let fase;
+    if (agent.parameters.nfase) {
+        fase = agent.parameters.nfase;
+        console.log('CONVERSACION nfase: ' + fase);
+    } else if (faseCliente) {
+        fase = faseCliente;
+        console.log('CONVERSACION faseCliente: ' + fase);
+    }
+    agent.add('En la fase ' + fase + ', se permite:');
+    agent.add('Deporte...');
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+
+function turismo(agent) {
+    console.log('CONVERSACION Intent: ' + agent.intent);
+    let fase;
+    if (agent.parameters.nfase) {
+        fase = agent.parameters.nfase;
+        console.log('CONVERSACION nfase: ' + fase);
+    } else if (faseCliente) {
+        fase = faseCliente;
+        console.log('CONVERSACION faseCliente: ' + fase);
+    }
+    agent.add('En la fase ' + fase + ', se permite:');
+    agent.add('Turismo...');
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+
+function piscinasYplayas(agent) {
+    console.log('CONVERSACION Intent: ' + agent.intent);
+    let fase;
+    if (agent.parameters.nfase) {
+        fase = agent.parameters.nfase;
+        console.log('CONVERSACION nfase: ' + fase);
+    } else if (faseCliente) {
+        fase = faseCliente;
+        console.log('CONVERSACION faseCliente: ' + fase);
+    }
+    agent.add('En la fase ' + fase + ', se permite:');
+    agent.add('Piscinas y playas...');
+}
+
+
 // ------------------------------------- INFORMACIÓN PARA LA CIUDADANÍA ------------------------------------------------
 // https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov-China/ciudadania.htm
 const telefonosInfoUrl = 'https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov-China/telefonos.htm';
@@ -682,6 +791,13 @@ router.post('/', (request, response) => {
     intentMap.set('Hosteleria - Terrazas', terrazas);
     intentMap.set('Hosteleria - A domicilio', adomicilio);
     intentMap.set('Hosteleria - Discotecas', discotecas);
+
+    intentMap.set('Servicios sociales', serviciosSociales);
+    intentMap.set('Educacion', educacion);
+    intentMap.set('Cultura', cultura);
+    intentMap.set('Derporte', deporte);
+    intentMap.set('Turismo', turismo);
+    intentMap.set('Piscinas y playas', piscinasYplayas);
 
     intentMap.set('CCAA - Tlf', telefonosInfo);
 

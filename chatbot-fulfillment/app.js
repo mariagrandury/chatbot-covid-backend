@@ -41,7 +41,7 @@ async function hola(agent) { // Wording: check
         }*/
         agent.add('Perfecto, muchas gracias.');
         agent.add('Le puedo explicar cómo interactuar conmigo si todavía no me conoce.');
-        agent.add(new Suggestion('Explícame')); // TODO emoji explícame
+        agent.add(new Suggestion('Explícame 😊 ')); // TODO emoji
         agent.add(new Suggestion('Explicación de quién soy y cómo le puedo ayudar'));
         onInit = false;
         sugerenciasInicio(agent);
@@ -57,10 +57,10 @@ function explicacion(agent) { // Wording: check
     agent.add('Mi creadora es María Grandury, soy su Trabajo Fin de Grado.'); // TODO Aurora mi bebé
     // agent.add('Todavía estoy aprendiendo, así que agradecería su opinión cuando finalice nuestra conversación.');
     agent.add('Puedo aclararle sus dudas respecto a:');
-    agent.add('- Los síntomas de la COVID-19 y cómo actuar si los presenta.');
-    agent.add('- Las medidas de higiene que debe respetar para su seguridad.');
-    agent.add('- Las medidas de prevención que se deben adoptar en diferentes espacios, como restaurantes, centros culturales, hoteles, piscinas y playas.');
-    agent.add('- La evolución de la pandemia en España y las características de las diferentes fases del plan de transición a una nueva normalidad.');
+    agent.add('- 🌡️ Los síntomas de la COVID-19 y cómo actuar si los presenta');
+    agent.add('- 🧼 Las medidas de higiene que debe respetar para su seguridad ');
+    agent.add('- 🧾 ⚠ Las medidas de prevención que se deben adoptar en diferentes espacios, como restaurantes, centros culturales, hoteles, piscinas y playas ');
+    agent.add('- 📉 La evolución de la pandemia en España y las características de las diferentes fases del plan de transición a una nueva normalidad');
     agent.add('Puede plantearme sus dudas escribiendo en su teclado o seleccionar alguna de las sugerencias que le propongo.');
     agent.add('En todo momento puede escribir \"Menú\" para volver al menú inicial.');
     agent.add('Toda la información la he recogido de la página oficial del Ministerio de Sanidad.');
@@ -70,18 +70,20 @@ function explicacion(agent) { // Wording: check
 
 function sugerenciasInicio(agent) {
     if (agent.intent === 'Sintomas') {
-        agent.add(new Suggestion('Cómo actuar 🤔 ❔ 💭'));
+        agent.add(new Suggestion('Cómo actuar ❔ 💭'));
         agent.add(new Suggestion('Cómo actuar si presenta síntomas'));
     } else {
-        agent.add(new Suggestion('Síntomas 🤒'));
+        agent.add(new Suggestion('Síntomas 🌡️ ')); // 🤒
         agent.add(new Suggestion('Síntomas de la COVID-19'));
     }
-    agent.add(new Suggestion('Medidas 🧼'));
-    agent.add(new Suggestion('Medidas de higiene'));
-    agent.add(new Suggestion('Normativa 🧾 ⚠️ 🛑 ⛔️ 📛 🚫'));
+    if (agent.intent !== 'Sintomas - Medidas higiene') {
+        agent.add(new Suggestion('Medidas 🧼'));
+        agent.add(new Suggestion('Medidas de higiene'));
+    }
+    agent.add(new Suggestion('Normativa 🧾 ⚠️ 🛑 ⛔️  🚫')); // TODO emoji
     agent.add(new Suggestion('Medidas de prevención adoptadas'));
     agent.add(new Suggestion('Evolución 📉'));
-    agent.add(new Suggestion('Fases de la desescalada'));
+    agent.add(new Suggestion('Situacíon actual y fases de la desescalada'));
 }
 
 function menu (agent) {
@@ -112,14 +114,9 @@ function gracias(agent) {
 }
 
 
-function adios(agent) { // TODO modificar para que se escriba según ocurre todo, no al decir adios
+function adios(agent) {
     console.log('CONVERSACION Intent: ' + agent.intent);
     agent.add('Ha sido un placer ayudarle, ¡hasta pronto!');
-
-    console.log('Session: ' + dialogflowSession);
-    console.log('No match messages: ', noMatchMessages);
-    dialogflowSession = '';
-    noMatchMessages = [];
 }
 
 function opinion(agent) {
@@ -128,15 +125,15 @@ function opinion(agent) {
     agent.add('Puede elegir un número de estrellas de 1 a 5, siendo 5 la mejor calificación.');
     // agent.add('También puede escribir su opinión si prefiere.'); // TODO FUTURO permitir que escriba la opinión
     agent.add('Gracias por ayudarme a mejorar');
-    agent.add(new Suggestion('⭐️'));
+    agent.add(new Suggestion('⭐'));
     agent.add(new Suggestion('Muy mal'));
     agent.add(new Suggestion('⭐⭐'));
     agent.add(new Suggestion('Mal'));
-    agent.add(new Suggestion('⭐️⭐️⭐️'));
+    agent.add(new Suggestion('⭐⭐⭐'));
     agent.add(new Suggestion('Regular'));
     agent.add(new Suggestion('⭐⭐⭐⭐'));
     agent.add(new Suggestion('Bien'));
-    agent.add(new Suggestion('⭐️⭐️⭐️⭐️⭐️'));
+    agent.add(new Suggestion('⭐⭐⭐⭐⭐'));
     agent.add(new Suggestion('Muy bien'));
 }
 
@@ -258,16 +255,52 @@ function medidasCentrosCulturales(agent) {
     console.log('CONVERSACION Intent: ' + agent.intent);
     agent.add('Las medidas que se deben respetar para el acceso a bibliotecas, salas de exposiciones y monumentos son:');
     agent.add('- Instalar barreras físicas de protección en mostradores de información y atención al público.');
-    agent.add('- Instalar carteles con normas y recomendaciones específicas para el público.');
-    agent.add('- Instalar vinilos de señalización con indicaciones sobre la distancia de seguridad, para evitar que se formen colas o aglomeraciones en la entrada y/o salida.');
+    agent.add('- Colgar carteles con normas y recomendaciones para el público.');
+    agent.add('- Colocar vinilos para la señalización de la distancia de seguridad.');
+    agent.add('- Evitar que se formen colas o aglomeraciones en la entrada y/o salida.');
     agent.add('- Limpiar y desinfectar los inmuebles antes de la reapertura.');
-    agent.add('- No ofrecer servicios complementarios, tales como tiendas, cafetería, guardarropa o consigna.'); // Fase 1, cultura + Fase 2, cultura
-    agent.add('En los casos aplicables:');
-    agent.add('- Guardar en un lugar apartado y separadas entre sí durante al menos 14 días las obras consultadas.'); // Fase 1, cultura, bibliotecas
-    agent.add('- Excluir de la visita pública los lugares donde no pueda garantizarse la seguridad de los visitantes.');
-    agent.add('- Inhabilitar el uso de elementos expuestos diseñados para un uso táctil por el visitante, así como las audioguías y folletos');
+    agent.add('- No ofrecer servicios de guardarropa o consigna.');
+    agent.add('Además, se deben añadir varias medidas en cada caso particular:');
+    agent.add(new Suggestion('📚 🖋️'));
+    agent.add(new Suggestion('Medidas en bibliotecas'));
+    agent.add(new Suggestion('🏺 🎨'));
+    agent.add(new Suggestion('Medidas en exposiciones y museos'));
+    agent.add(new Suggestion('🎬 🎭'));
+    agent.add(new Suggestion('Medidas en cines y teatros'));
 }
 
+function medidasBibliotecas(agent) {
+    console.log('CONVERSACION Intent: ' + agent.intent);
+    agent.add('Las medidas que se deben respetar para la reapertura de bibliotecas son:');
+    agent.add('- Limpiar y desinfectar los puestos de lectura tras cada usuario.');
+    agent.add('- Limpiar los ordenadores tras cada uso.');
+}
+
+function medidasExposiciones(agent) {
+    console.log('CONVERSACION Intent: ' + agent.intent);
+    agent.add('Las medidas que se deben respetar para la reapertura de salas de exposiciones y museos son:');
+    agent.add('- Evitar la celebración de eventos de inauguración de exposiciones que puedan causar aglomeraciones.');
+    agent.add('- Excluir de la visita pública los lugares donde no pueda garantizarse la seguridad de los visitantes.');
+    agent.add('- Inhabilitar el uso de elementos expuestos diseñados para un uso táctil por el visitante, así como las audioguías y folletos.');
+    agent.add('- Evitar la confluencia de trabajadores de distintas especialidades a la hora del montaje y desmontaje de exposiciones temporales.');
+    agent.add('- Limpiar y desinfectar, al menos una vez al día, el interior de los vehículos de transporte y las herramientas utilizadas durante el montaje.');
+}
+
+function medidasMonumentos(agent) {
+    console.log('CONVERSACION Intent: ' + agent.intent);
+    agent.add('Las medidas que se deben respetar para la reapertura de monumentos son:');
+    agent.add('- Permitir únicamente visitas individuales o de convivientes.');
+    agent.add('- No organizar ningún otro tipo de actividad cultural distinta a las visitas.');
+    agent.add('- Evitar la confluencia de personal trabajador, investigador, residente o usuario de los inmuebles con los visitantes.');
+    agent.add('- Establecer en recintos religiosos recorridos obligatorios para separar circulaciones.');
+}
+
+function medidasCines(agent) {
+    console.log('CONVERSACION Intent: ' + agent.intent);
+    agent.add('Las medidas que se deben respetar para la reapertura de cines, teatros y auditorios son:');
+    agent.add('- Preasignar las butacas en la medida de lo posible.');
+    agent.add('- Priorizar la venta online o telefónica de las entradas.');
+}
 
 // --------------------------- PLAN PARA LA TRANSICIÓN A UNA NUEVA NORMALIDAD ------------------------------------------
 
@@ -431,8 +464,6 @@ function faseCA (agent) { // TODO REVISAR da problemas !!
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-
-// TODO idea: añadir un tercer argumento a las funciones peques para que si se pregunta directamente por ellas se dé más info
 
 function medidasSociales (agent) {
     console.log('Intent: ' + agent.intent);
@@ -653,7 +684,7 @@ function serviciosSociales(agent) {
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-function educacion(agent) { // TODO no dar toda la info si se pregunta en general
+function educacion(agent) {
     console.log('CONVERSACION Intent: ' + agent.intent);
     let fase;
     if (agent.parameters.nfase) {
@@ -684,12 +715,8 @@ function bibliotecas(agent, fase) {
     }
     if (fase === 1) {
         agent.add('- Bibliotecas públicas y privadas para préstamo y devolución de obras, así como para lectura en sala con una reducción del aforo al 30%.');
-        // A partir de aquí solo si se pregunta concrétamente por las bibliotecas ??
-        agent.add('- No pueden llevarse a cabo actividades culturales ni hacer uso de los ordenadores y medios informáticos.');
-    } else if (fase === 2) {
-        agent.add('- Bibliotecas públicas y privadas para préstamo y devolución de obras, así como para lectura en sala con una reducción del aforo al 30%.');
-        agent.add('- Se puede hacer uso de los ordenadores y medio informáticos, los cuales deben limpiarse tras cada uso.');
-        agent.add('- Las salas infantiles y las colecciones de libre acceso permanecen cerradas.');
+   } else if (fase === 2) {
+        agent.add('- Bibliotecas públicas y privadas para préstamo y devolución de obras, así como para lectura en sala con una reducción del aforo al 30%. También se puede hacer uso de los ordenadores.');
     }
 }
 function laboratorios(agent, fase = 0) {
@@ -697,7 +724,7 @@ function laboratorios(agent, fase = 0) {
     if (fase === 0) {
         agent.add('Desde la fase 1, se permite la reapertura de:');
     }
-    agent.add('- Laboratorios universitarios y entidades de naturaleza pública y privada que desarrollen o den soporte a actividades de investigación científica y técnica, desarrollo e innovación en todos los campos de la economía y de la sociedad.');
+    agent.add('- Laboratorios universitarios y entidades públicas y privadas que desarrollen actividades de investigación, desarrollo e innovación.');
 }
 function congresos(agent, fase = 0) {
     console.log('CONVERSACION Intent: ' + agent.intent);
@@ -938,6 +965,12 @@ function telefonosInfo(agent) {
     if (ca === 'Asturias') {
         tlf = '900 878 232'; // 984 100 400 / 112 marcando 1
     }
+    agent.add(new Card({
+            title: 'Teléfonos COVID-19',
+            buttonText: 'Teléfonos COVID-19',
+            buttonUrl: telefonosInfoUrl
+        })
+    );
     agent.add('El teléfono de información en ' + ca + ' es ' + tlf + '.');
     agent.add('¿Le puedo ayudar en algo más?');
     sugerenciasInicio(agent);
@@ -987,7 +1020,8 @@ router.post('/', (request, response) => {
     console.log('Dialogflow Request headers : ' + JSON.stringify(request.headers));
     console.log('Dialogflow Request body : ' + JSON.stringify(request.body));
     dialogflowSession = request.body.session;
-    if (request.body.queryResult.action === 'input.unknown') { // TODO check que guarda el no match message
+    // console.log('CONVERSACION Dialogflow session: ' + dialogflowSession);
+    if (request.body.queryResult.action === 'input.unknown') {
         noMatchMessages.push(request.body.queryResult.queryText);
         console.log('CONVERSACION No match message: ' + request.body.queryResult.queryText);
     }
@@ -1071,12 +1105,17 @@ router.post('/', (request, response) => {
 
     intentMap.set('Sintomas', sintomas);
     intentMap.set('Sintomas - Como actuar', sintomasComoActuar);
+    intentMap.set('Sintomas - Medidas higiene', medidasHigiene);
 
     intentMap.set('Medidas seguridad', medidasSeguridad);
     intentMap.set('Medidas seguridad - Trabajo', medidasTrabajo);
-    intentMap.set('Medidas seguridad - Higiene', medidasHigiene);
     intentMap.set('Medidas seguridad - Hosteleria', medidasHosteleria);
     intentMap.set('Medidas seguridad - Centros culturales', medidasCentrosCulturales);
+    intentMap.set('Medidas seguridad - Bibliotecas', medidasBibliotecas);
+    intentMap.set('Medidas seguridad - Exposiciones', medidasExposiciones);
+    intentMap.set('Medidas seguridad - Monumentos', medidasMonumentos);
+    intentMap.set('Medidas seguridad - Cines', medidasCines);
+
 
     intentMap.set('Fases', fases);
     intentMap.set('Situacion actual', situacionActual);

@@ -938,6 +938,8 @@ function museos(agent, fase = 0) {
         agent.add('- Museos a 1/3 de su aforo. Tenga en cuenta que los recorridos podrían estar alterados por medidas de seguridad.');
     } else if (fase === 2) {
         agent.add('- Museos, salas de exposiciones y monumentos, siempre que no se supere 1/3 del aforo y se adopten las medidas necesarias para el control de las aglomeraciones.');
+    } else if (fase === 3) {
+        agent.add('- Museos, salas de exposiciones y monumentos, siempre que no se supere el 50% del aforo y se adopten las medidas necesarias para el control de las aglomeraciones. Se pueden realizar visitas en grupos de hasta 20 personas.');
     }
 }
 function espectaculos(agent, fase = 0) {
@@ -950,7 +952,11 @@ function espectaculos(agent, fase = 0) {
         agent.add(' - Locales y establecimientos para actos y espectáculos culturales. El aforo máximo es de 30 personas en lugares cerrados y 200 personas al aire libre.');
     } else if (fase === 2) {
         agent.add('- Locales y establecimientos para actos y espectáculos culturales. El aforo máximo es de 50 personas en lugares cerrados y 400 personas al aire libre.');
-        agent.add('- Cines, teatro y auditorios siempre que cuenten con butacas preasignadas y no se supere 1/3 del aforo.');
+        agent.add('- Cines, teatros y auditorios si cuentan con butacas preasignadas y no se supera 1/3 del aforo.');
+        agent.add('Intente comprar su entrada online o por teléfono si es posible.')
+    } else if (fase === 3) {
+        agent.add('- Locales y establecimientos para actos y espectáculos culturales. El aforo máximo es de 80 personas en lugares cerrados y 400 personas al aire libre.');
+        agent.add('- Cines, teatros, auditorios y circos si cuentan con butacas preasignadas y no se supera el 50% del aforo.');
         agent.add('Intente comprar su entrada online o por teléfono si es posible.')
     }
 }
@@ -1295,9 +1301,9 @@ router.post('/', (request, response) => {
     intentMap.set('Educacion - Congresos', congresos); // D
     intentMap.set('Educacion - Centros formacion', centrosFormacion); // D
 
-    intentMap.set('Cultura', cultura);
-    intentMap.set('Cultura - Museos', museos);
-    intentMap.set('Cultura - Espectáculos', espectaculos);
+    intentMap.set('Cultura', cultura); // D
+    intentMap.set('Cultura - Museos', museos); // D aforo
+    intentMap.set('Cultura - Espectaculos', espectaculos); // D aforo
 
     intentMap.set('Deporte', deporte);
     intentMap.set('Deporte - Entrenamiento', entrenamiento);

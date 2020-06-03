@@ -1027,16 +1027,22 @@ function turismoActivo(agent, fase = 0) {
 function turismo(agent) {
     console.log('CONVERSACION Intent: ' + agent.intent);
     let fase = setFase(agent);
-    agent.add('En la fase ' + fase + ':');
     if (fase === 1) {
+        agent.add('En la fase 1:');
         agent.add('- El servicio de restauración de hoteles está reservado para los clientes hospedados.');
         agent.add('- No está permitida la utilización de piscinas, spas, gimnasios, miniclubs, zonas infantiles, discotecas y espacios de eventos.');
         agent.add('- La utilización de ascensores está limitada y la ocupación máxima es de una persona.');
-    } else if (fase === 2) {
-        agent.add('- Se permite la reapertura de las zonas comunes de hoteles y alojamientos turísticos, a 1/3 del aforo.');
-        agent.add('- Las actividades de animación o clases grupales están organizadas con un aforo máximo de 20 personas y se celebrarán principalmente al aire libre.');
-        agent.add('- Se permite la reapertura de parques naturales y teleféricos, con limitaciones de aforo.');
-        agent.add('- Se permite también la reapertura de piscinas y spas.');
+    } else if (fase === 2 || fase === 3) {
+        agent.add('En la fase ' + fase + ', se permite la reapertura de:');
+        if (fase === 2) {
+            agent.add('- Zonas comunes de hoteles y alojamientos turísticos, a 1/3 del aforo.');
+        } else {
+            agent.add('- Zonas comunes de hoteles y alojamientos turísticos, al 50% del aforo.');
+        }
+        agent.add('- Piscinas y spas de hoteles y establecimientos turísticos.');
+        agent.add('- Parques naturales y teleféricos, con limitaciones de aforo.');
+        agent.add('Además, se pueden organizar:');
+        agent.add('- Actividades de animación y clases grupales, con un aforo máximo de 20 personas y principalmente al aire libre.');
     }
     agent.add('Recuerde respetar siempre las medidas de higiene y prevención establecidas.');
     agent.add('¿Tiene más dudas referentes a la fase ' + fase + '?');
@@ -1268,11 +1274,11 @@ router.post('/', (request, response) => {
     intentMap.set('Comercio - Plantas', plantas); // D
     intentMap.set('Comercio - Centros comerciales', centrosComerciales); // D
 
-    intentMap.set('Hosteleria', hosteleria);
-    intentMap.set('Hosteleria - Terrazas', terrazas);
-    intentMap.set('Hosteleria - A domicilio', adomicilio);
-    intentMap.set('Hosteleria - Barra', barra);
-    intentMap.set('Hosteleria - Discotecas', discotecas);
+    intentMap.set('Hosteleria', hosteleria); // D
+    intentMap.set('Hosteleria - Terrazas', terrazas); // D
+    intentMap.set('Hosteleria - A domicilio', adomicilio); // D
+    intentMap.set('Hosteleria - Barra', barra); // D
+    intentMap.set('Hosteleria - Discotecas', discotecas); // D
 
     intentMap.set('Servicios sociales', serviciosSociales); // D
 
@@ -1293,7 +1299,7 @@ router.post('/', (request, response) => {
     intentMap.set('Deporte - Piscinas deportivas', piscinasDeportivas);
     intentMap.set('Deporte - Turismo activo', turismoActivo);
 
-    intentMap.set('Turismo', turismo);
+    intentMap.set('Turismo', turismo); // D
 
     intentMap.set('Piscinas y playas', piscinasYplayas);
     intentMap.set('Piscinas recreativas', piscinasRecreativas);

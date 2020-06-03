@@ -786,9 +786,13 @@ function hosteleria(agent) {
     agent.add('En la fase ' + fase + ', se permite la reapertura de:');
     terrazas(agent, fase);
     if (fase !== 1) {
-        agent.add('Se permite:');
+        agent.add('Se permite también:');
         adomicilio(agent, fase);
     }
+    if (fase === 3) {
+        barra(agent, fase);
+    }
+    discotecas(agent);
     agent.add('Recuerde priorizar el pago con tarjeta y respetar las medidas de higiene y prevención.');
     agent.add('¿Tiene más dudas referentes a la fase ' + fase + '?');
     sugerenciasFases(agent, fase);
@@ -796,21 +800,33 @@ function hosteleria(agent) {
 function terrazas(agent, fase = 0) {
     console.log('CONVERSACION Intent: ' + agent.intent);
     if (fase === 0) {
-        agent.add('Desde la fase 1, se permite la reapertura de:');
+        fase = setFase(agent);
+        agent.add('En la fase ' + fase + ' se permite la reapertura de:');
     }
-    agent.add('- Terrazas al aire libre de los establecimientos de hostelería y restauración, limitando las mesas al 50% y la ocupación a 10 personas por mesa.');
+    if (fase === 1 || fase === 2) {
+        agent.add('- Terrazas al aire libre de los establecimientos de hostelería y restauración, limitando las mesas al 50% y la ocupación a 10 personas por mesa.');
+    } else if (fase === 3) {
+        agent.add('- Terrazas al aire libre de los establecimientos de hostelería y restauración, limitando las mesas al 75% y la ocupación a 20 personas por mesa.');
+    }
 }
 function adomicilio(agent, fase = 0) {
     console.log('CONVERSACION Intent: ' + agent.intent);
     if (fase === 0) {
         agent.add('A partir de la fase 2, se permite:');
     }
-    agent.add('- El consumo dentro del local sentado en mesa y preferentemente mediante reserva previa.');
+    agent.add('- El consumo dentro del local en mesas y preferentemente con reserva previa.');
     agent.add('- Encargar comida y bebida para llevar en el propio establecimiento.');
+}
+function barra(agent, fase = 0) {
+    console.log('CONVERSACION Intent: ' + agent.intent);
+    if (fase === 0) {
+        agent.add('A partir de la fase 3, se permite:');
+    }
+    agent.add('- El consumo en la barra si se garantiza la distancia interpersonal de 2 metros.');
 }
 function discotecas(agent) {
     console.log('CONVERSACION Intent: ' + agent.intent);
-    agent.add('Todavía no se permite la reapertura de discotecas y bares de ocio nocturno.');
+    agent.add('NO se permite la reapertura de discotecas y bares de ocio nocturno.');
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -1255,6 +1271,7 @@ router.post('/', (request, response) => {
     intentMap.set('Hosteleria', hosteleria);
     intentMap.set('Hosteleria - Terrazas', terrazas);
     intentMap.set('Hosteleria - A domicilio', adomicilio);
+    intentMap.set('Hosteleria - Barra', barra);
     intentMap.set('Hosteleria - Discotecas', discotecas);
 
     intentMap.set('Servicios sociales', serviciosSociales); // D

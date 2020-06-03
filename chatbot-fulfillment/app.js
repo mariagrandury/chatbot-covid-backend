@@ -435,7 +435,19 @@ function medidasPlayas(agent) {
     agent.add(new Suggestion('Medidas en exposiciones y museos'));
 }
 
-
+function medidasJuegosYapuestas(agent) {
+    console.log('CONVERSACION Intent: ' + agent.intent);
+    agent.add('Las medidas que se deben respetar para la reapertura de locales de juegos y apuestas incluyen:');
+    agent.add('- Limpiar y desinfectar todas las máquinas, sillas y mesas entre un cliente y el siguiente.');
+    agent.add('- Garantizar la higienización cada dos horas de las fichas, cartar y otros elementos de juego.');
+    agent.add('- Ventilar periódicamente las instalaciones, como mínimo dos veces al día.');
+    agent.add('Recuerde respetar siempre las medidas de higiene y prevención establecidas.');
+    agent.add('¿Le puedo ayudar con algo más?');
+    agent.add(new Suggestion('🧼 📏'));
+    agent.add(new Suggestion('Medidas de higiene y prevención'));
+    agent.add(new Suggestion('🍴 ☕'));
+    agent.add(new Suggestion('Medidas en hostelería'));
+}
 
 // --------------------------- PLAN PARA LA TRANSICIÓN A UNA NUEVA NORMALIDAD ------------------------------------------
 
@@ -620,8 +632,6 @@ function setFase(agent) {
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-
-// TODO añadir la palabra clave aforo para todas las categorías siguientes
 
 function medidasSociales(agent) {
     console.log('CONVERSACION Intent: ' + agent.intent);
@@ -963,20 +973,19 @@ function espectaculos(agent, fase = 0) {
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-function deporte(agent) { // TODO dar menos información si preguntan por deporte en general
+function deporte(agent) { // TODO dar menos información si preguntan por deporte en general, hay demasiada info en deportes 2 y 3
     console.log('CONVERSACION Intent: ' + agent.intent);
     let fase = setFase(agent);
     if (fase === 1) {
-        agent.add('En la fase 1, se permite la reapertura de:');
+        agent.add('En la fase 1 se permite la reapertura de:');
         agent.add('- Centros de Alto Rendimiento');
         agent.add('- Instalaciones deportivas al aire libre');
         agent.add('- Centros deportivos para la práctica deportiva individual y el entrenamiento medio en ligas profesionales');
-    } else if (fase === 2) {
-        agent.add('En la fase2, se permite la reanudación de:');
+    } else {
+        agent.add('En la fase ' + fase + ' se permite la reanudación de:');
         entrenamiento(agent, fase);
         competicion(agent, fase);
         agent.add('Además, se permite el acceso a:');
-        instalacionesCubiertas(agent, fase);
         piscinasDeportivas(agent, fase);
         agent.add('Por último, se pueden realizar:');
         turismoActivo(agent, fase);
@@ -988,13 +997,22 @@ function deporte(agent) { // TODO dar menos información si preguntan por deport
 function entrenamiento(agent, fase = 0) {
     console.log('CONVERSACION Intent: ' + agent.intent);
     if (fase === 0) {
-        agent.add('A partir de la fase 2 se permite la reanudación de:');
+        fase = setFase(agent);
+        if (fase === 1) { fase += 1; }
+        agent.add('En la fase ' + fase + ' se permite la reanudación de:');
     }
-    agent.add('- Entrenamientos de deportistas profesionales y no profesionales, de manera individual.');
-    agent.add('- Entrenamientos dirigidos a la fase previa de la competición en grupos de hasta 14 personas.');
-    agent.add('- Reuniones técnicas de trabajo en grupos de hasta 15 personas, incluyendo al técnico.');
-    agent.add('En la medida de lo posible, no se debe compartir ningún material de uso individual.');
-    agent.add('Pueden acceder a las instalaciones (incluyendo vestuarios) deportistas, personal técnico y árbitros.');
+    agent.add('- Entrenamientos de deportistas profesionales y no profesionales federados.');
+    agent.add('- Entrenamientos de carácter físico y técnico individuales.');
+    if (fase === 2) {
+        agent.add('- Entrenamientos tácticos en grupos de hasta 14 personas.');
+        agent.add('- Reuniones técnicas de trabajo en grupos de hasta 15 personas.');
+        agent.add('En la medida de lo posible, se debe evitar compartir ningún material y limitar el aforo a un 30%.');
+    } else {
+        agent.add('- Entrenamientos tácticos en grupos de hasta 20 personas.');
+        agent.add('- Reuniones técnicas de trabajo en grupos de hasta 20 personas.');
+        agent.add('En la medida de lo posible, se debe evitar compartir ningún material y limitar el aforo a un 50%.');
+    }
+    agent.add('Pueden acceder a las instalaciones (incluyendo vestuarios) deportistas alto nivel, de alto rendimiento, profesionales, federados, personal técnico y árbitros.');
     agent.add('Los medios de comunicación no pueden asistir a las sesiones de entrenamiento.');
 }
 function competicion(agent, fase = 0) {
@@ -1002,18 +1020,8 @@ function competicion(agent, fase = 0) {
     if (fase === 0) {
         agent.add('A partir de la fase 2 se permite la reanudación de:');
     }
-    agent.add('- Competiciones de las Ligas Profesionales, sin público y a puerta cerrada.');
+    agent.add('- Competiciones de Ligas Profesionales, sin público y a puerta cerrada.');
     agent.add('Se permite la entrada de medios de comunicación para la retransmisión de la competición.');
-    agent.add('El Consejo Superior de Deportes determinará el número de personas que pueden acceder al estadio antes del inicio de la competición.');
-}
-function instalacionesCubiertas(agent, fase = 0) {
-    console.log('CONVERSACION Intent: ' + agent.intent);
-    if (fase === 0) {
-        agent.add('A partir de la fase 2 se permite la reapertura de:');
-    }
-    agent.add('- Instalaciones cubiertas, en las que se podrán reanudar competiciones sin público y a puerta cerrada');
-    agent.add('Se permite el acceso únicamente a deportistas de alto nivel, de alto rendimiento, profesionales, federados, árbitros o jueces y personal técnico federado.');
-    agent.add('El límite del aforo es un 30% y se requiere concertar cita previa.');
 }
 function piscinasDeportivas(agent, fase = 0) {
     console.log('CONVERSACION Intent: ' + agent.intent);
@@ -1030,9 +1038,14 @@ function piscinasDeportivas(agent, fase = 0) {
 function turismoActivo(agent, fase = 0) {
     console.log('CONVERSACION Intent: ' + agent.intent);
     if (fase === 0) {
-        agent.add('A partir de la fase 2, se pueden realizar:');
+        fase = setFase(agent);
+        agent.add('A partir de la fase ' + fase + ' se pueden realizar:');
     }
-    agent.add('- Actividades de turismo activo y de naturaleza en grupos de hasta 20 personas, debiendo concertarse estas actividades preferentemente mediante cita previa.')
+    if (fase === 2) {
+        agent.add('- Actividades de turismo activo y de naturaleza en grupos de hasta 20 personas, debiendo concertarse estas actividades preferentemente mediante cita previa.')
+    } else if (fase === 3) {
+        agent.add('- Actividades de turismo activo y de naturaleza en grupos de hasta 30 personas, debiendo concertarse estas actividades preferentemente mediante cita previa.')
+    }
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -1054,8 +1067,14 @@ function turismo(agent) {
         }
         agent.add('- Piscinas y spas de hoteles y establecimientos turísticos.');
         agent.add('- Parques naturales y teleféricos, con limitaciones de aforo.');
+        if (fase === 3) {
+            agent.add('- Zoológicos y acuarios, limitando el aforo total al 50% y el de cada atracción a 1/3.');
+        }
         agent.add('Además, se pueden organizar:');
         agent.add('- Actividades de animación y clases grupales, con un aforo máximo de 20 personas y principalmente al aire libre.');
+        if (fase === 3) {
+            agent.add('- Tours guiados, en grupos de un máximo de 20 personas y concertados mediante cita previa.');
+        }
     }
     agent.add('Recuerde respetar siempre las medidas de higiene y prevención establecidas.');
     agent.add('¿Tiene más dudas referentes a la fase ' + fase + '?');
@@ -1094,6 +1113,24 @@ function playas(agent, fase = 0) {
     agent.add('Además, en la playa está permitida la práctica de actividades deportivas, profesionales o de recreo, siempre que se puedan desarrollar individualmente y sin contacto físico, permitiendo mantener una distancia mínima de dos metros entre los participantes.')
 }
 
+// ---------------------------------------------------------------------------------------------------------------------
+
+function tiempoLibre(agent, fase = 0) {
+    if (fase === 0) {
+        agent.add('En la fase 3 se permite el desarrolo de:');
+    }
+    agent.add('- Actividades de tiempo libre para niños y jóvenes');
+    agent.add('Al aire libre, el número de participantes se debe limitar al 50%, con un máximo de 200.');
+    agent.add('En espacios cerrados, se debe limitar a 1/3, con un máximo de 80 participantes.');
+    agent.add('Durante el desarrollo de las actividades se deben realizar grupos de un máximo de 10 personas.');
+}
+
+function juegosYapuestas(agent, fase = 0) {
+    if (fase === 0) {
+        agent.add('En la fase 3 se permite la reapertura de:');
+    }
+    agent.add('- Establecimientos y locales de juegos y apuestas, con un aforo limitado al 50% sin poder superar las 50 personas en total en el local.');
+}
 
 // ------------------------------------- INFORMACIÓN PARA LA CIUDADANÍA ------------------------------------------------
 // https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov-China/ciudadania.htm
@@ -1265,6 +1302,7 @@ router.post('/', (request, response) => {
     intentMap.set('Medidas seguridad - Turismo', medidasTurismo);
     intentMap.set('Medidas seguridad - Piscinas', medidasPiscinas);
     intentMap.set('Medidas seguridad - Playas', medidasPlayas);
+    intentMap.set('Medidas seguridad - Juegos y apuestas', medidasJuegosYapuestas);
 
     intentMap.set('Fases', fases);
     intentMap.set('Situacion actual', situacionActual);
@@ -1305,18 +1343,20 @@ router.post('/', (request, response) => {
     intentMap.set('Cultura - Museos', museos); // D aforo
     intentMap.set('Cultura - Espectaculos', espectaculos); // D aforo
 
-    intentMap.set('Deporte', deporte);
-    intentMap.set('Deporte - Entrenamiento', entrenamiento);
-    intentMap.set('Deporte - Competicion', competicion);
-    intentMap.set('Deporte - Instalaciones cubiertas', instalacionesCubiertas);
-    intentMap.set('Deporte - Piscinas deportivas', piscinasDeportivas);
-    intentMap.set('Deporte - Turismo activo', turismoActivo);
+    intentMap.set('Deporte', deporte); // D
+    intentMap.set('Deporte - Entrenamiento', entrenamiento); // D aforo
+    intentMap.set('Deporte - Competicion', competicion); // D aforo
+    intentMap.set('Deporte - Piscinas deportivas', piscinasDeportivas); // D aforo
+    intentMap.set('Deporte - Turismo activo', turismoActivo); // D
 
     intentMap.set('Turismo', turismo); // D
 
     intentMap.set('Piscinas y playas', piscinasYplayas);
     intentMap.set('Piscinas recreativas', piscinasRecreativas);
     intentMap.set('Playas', playas);
+
+    intentMap.set('Tiempo libre', tiempoLibre); // D
+    intentMap.set('Juegos y apuestas', juegosYapuestas); // D aforo
 
     intentMap.set('Telefonos informacion', telefonosInfo);
 

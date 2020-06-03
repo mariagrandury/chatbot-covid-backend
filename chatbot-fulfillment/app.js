@@ -205,7 +205,7 @@ function medidasHigiene(agent) {
 
 // ----------------------------------------- MEDIDAS DE SEGURIDAD ------------------------------------------------------
 
-function medidasSeguridad (agent) {
+function medidasSeguridad (agent) { // TODO diferenciar entre estos emojis y los de las fases
     console.log('CONVERSACION Intent: ' + agent.intent);
     agent.add('¿Sobre qué medidas quiere que le informe en particular?');
     agent.add(new Suggestion('💻 💼'));
@@ -214,13 +214,13 @@ function medidasSeguridad (agent) {
     agent.add(new Suggestion('Medidas en hostelería'));
     agent.add(new Suggestion('📚 🎨 '));
     agent.add(new Suggestion('Medidas en centros culturales'));
-    agent.add(new Suggestion('🏀🏐🏉🎾🏓')); // TODO choose emoji sport
+    agent.add(new Suggestion('🏀🏐🏉🎾🏓')); // TODO choose emoji sport y ponerlo en dialogflow
     agent.add(new Suggestion('Medidas en centros deportivos'));
-    agent.add(new Suggestion('🛎️ 🛏️'));
+    agent.add(new Suggestion('🛎️ 🛏️')); // TODO tienen que ser diferentes a los de turismo en general, poner en dialogflow
     agent.add(new Suggestion('Medidas en establecimientos turísticos'));
     agent.add(new Suggestion('🏊‍♀️'));
     agent.add(new Suggestion('Medidas en piscinas'));
-    agent.add(new Suggestion('☀️ 🌞 ☀️⛱️')); // TODO check emoji sun
+    agent.add(new Suggestion('☀️ ⛱️'));
     agent.add(new Suggestion('Medidas en playas'));
 }
 
@@ -238,7 +238,7 @@ function medidasTrabajo(agent) {
     agent.add(new Suggestion('Cómo actuar si presenta síntomas en el trabajo'));
     agent.add(new Suggestion('Prevención 🧼'));
     agent.add(new Suggestion('Medidas de higiene y prevención'));
-    agent.add(new Suggestion('Centros culturales 🎨 ')); // TODO check que reenvía a medidas
+    agent.add(new Suggestion('Centros culturales 🎨 '));
     agent.add(new Suggestion('Medidas en centros culturales'));
 }
 
@@ -255,8 +255,6 @@ function medidasHosteleria(agent) {
     agent.add(new Suggestion('Medidas de higiene y prevención'));
     agent.add(new Suggestion('📚 🎨 '));
     agent.add(new Suggestion('Medidas en centros culturales'));
-    agent.add(new Suggestion('🏀🏐🏉🎾🏓'));
-    agent.add(new Suggestion('Medidas en centros deportivos'));
     agent.add(new Suggestion('🛎️ 🛏️'));
     agent.add(new Suggestion('Medidas en establecimientos turísticos'));
 }
@@ -342,8 +340,77 @@ function medidasCines(agent) {
     agent.add(new Suggestion('Medidas en bibliotecas'));
     agent.add(new Suggestion('🏺 🎨'));
     agent.add(new Suggestion('Medidas en exposiciones y museos'));
-    agent.add(new Suggestion('🎬 🎭'));
 }
+
+function medidasDeporte(agent) {
+    console.log('CONVERSACION Intent: ' + agent.intent);
+    agent.add('Las medidas que se deben respetar para la reapertura de instalaciones deportivas incluyen:');
+    agent.add('- Limpiar y desinfectar las instalaciones frecuentemente.');
+    agent.add('- Concertar cita previa para entrenamientos y competiciones.');
+    agent.add('- No compartir ningún material de uso individual, si no es posible, desinfectar tras cada uso.');
+    agent.add('- Reanudar competiciones de Ligas Profesionales sin público y a puerta cerrada.');
+    agent.add('- Permitir la entrada de medios de comunicación únicamente a competiciones, no entrenamientos.');
+    agent.add('Recuerde respetar siempre las medidas de higiene y prevención establecidas.');
+    agent.add('¿Le puedo ayudar con algo más?');
+    agent.add(new Suggestion('🧼 📏'));
+    agent.add(new Suggestion('Medidas de higiene y prevención'));
+    agent.add(new Suggestion('🏊‍♀️'));
+    agent.add(new Suggestion('Medidas en piscinas'));
+    agent.add(new Suggestion('☀️ ⛱️'));
+    agent.add(new Suggestion('Medidas en playas'));
+}
+
+function medidasTurismo(agent) {
+    console.log('CONVERSACION Intent: ' + agent.intent);
+    agent.add('Las medidas que se deben respetar para la reapertura de hoteles y establecimientos turísticos incluyen:');
+    agent.add('- Respetar las medidas establecidas en el ámbito de la hostelería y restauración.');
+    agent.add('- Determinar el aforo de los distintos espacios comunes.');
+    agent.add('- Ventilar los espacios cerrados donde se vayan a celebrar eventos dos horas antes de su uso.');
+    agent.add('- Realizar actividades de animación preferentemente al aire libre y evitar el intercambio de objetos.');
+    agent.add('Recuerde respetar siempre las medidas de higiene y prevención establecidas.');
+    agent.add('¿Le puedo ayudar con algo más?');
+    agent.add(new Suggestion('🧼 📏'));
+    agent.add(new Suggestion('Medidas de higiene y prevención'));
+    agent.add(new Suggestion('🍴 ☕'));
+    agent.add(new Suggestion('Medidas en hostelería'));
+    agent.add(new Suggestion('☀️ ⛱️'));
+    agent.add(new Suggestion('Medidas en playas'));
+}
+
+function medidasPiscinas(agent) {
+    console.log('CONVERSACION Intent: ' + agent.intent);
+    agent.add('Las medidas que se deben respetar para la reapertura de piscinas recreativas incluyen:');
+    agent.add('- Concertar cita previa para acceder a la piscina.');
+    agent.add('- Colocar carteles con las normas de higiene y prevención o anunciarlas por megafonía.');
+    agent.add('- Limpiar y desinfectar frecuentemente los equipos y materiales como barandillas y las taquillas.');
+    agent.add('- Garantizar la distancia de seguridad entre usuarios mediante señales en el suelo.');
+    agent.add('Recuerde respetar siempre las medidas de higiene y prevención establecidas.');
+    agent.add('¿Le puedo ayudar con algo más?');
+    agent.add(new Suggestion('🧼 📏'));
+    agent.add(new Suggestion('Medidas de higiene y prevención'));
+    agent.add(new Suggestion('☀️ ⛱️'));
+    agent.add(new Suggestion('Medidas en playas'));
+    agent.add(new Suggestion('🎬 🎭'));
+    agent.add(new Suggestion('Medidas en cines y teatros'));
+}
+
+function medidasPlayas(agent) {
+    console.log('CONVERSACION Intent: ' + agent.intent);
+    agent.add('Las medidas que se deben respetar para la reapertura de playas incluyen:');
+    agent.add('- Establecer limitaciones de acceso en caso necesario para asegurar la distancia entre bañistas.');
+    agent.add('- Limitar la ocupación de duchas, aseos y vestuarios a una persona.');
+    agent.add('- Ubicar objetos personales como toallas y tumbonas garantizando el perímetro de seguridad.')
+    agent.add('Recuerde respetar siempre las medidas de higiene y prevención establecidas.');
+    agent.add('¿Le puedo ayudar con algo más?');
+    agent.add(new Suggestion('🧼 📏'));
+    agent.add(new Suggestion('Medidas de higiene y prevención'));
+    agent.add(new Suggestion('🏊‍♀️'));
+    agent.add(new Suggestion('Medidas en piscinas'));
+    agent.add(new Suggestion('🏺 🎨'));
+    agent.add(new Suggestion('Medidas en exposiciones y museos'));
+}
+
+
 
 // --------------------------- PLAN PARA LA TRANSICIÓN A UNA NUEVA NORMALIDAD ------------------------------------------
 
@@ -1168,6 +1235,10 @@ router.post('/', (request, response) => {
     intentMap.set('Medidas seguridad - Exposiciones', medidasExposiciones);
     intentMap.set('Medidas seguridad - Monumentos', medidasMonumentos);
     intentMap.set('Medidas seguridad - Cines', medidasCines);
+    intentMap.set('Medidas seguridad - Deporte', medidasDeporte);
+    intentMap.set('Medidas seguridad - Turismo', medidasTurismo);
+    intentMap.set('Medidas seguridad - Piscinas', medidasPiscinas);
+    intentMap.set('Medidas seguridad - Playas', medidasPlayas);
 
     intentMap.set('Fases', fases);
     intentMap.set('Situacion actual', situacionActual);

@@ -810,7 +810,7 @@ function adomicilio(agent, fase = 0) {
 }
 function discotecas(agent) {
     console.log('CONVERSACION Intent: ' + agent.intent);
-    agent.add('Todavía no se permite la apertura de discotecas y bares de ocio nocturno.');
+    agent.add('Todavía no se permite la reapertura de discotecas y bares de ocio nocturno.');
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -827,8 +827,8 @@ function serviciosSociales(agent) {
             'rehabilitación, atención temprana y atención diurna para\n' +
             'personas con discapacidad y/o en situación de dependencia.');
     }
-    if (fase === 2) {
-        agent.add('En la fase 2, se permiten las visitas a residentes de:');
+    if (fase === 2 || fase === 3) {
+        agent.add('Desde la fase 2, se permiten las visitas a residentes de:');
         agent.add('- Viviendas tuteladas');
         agent.add('- Centros residenciales de personas con discapacidad');
         agent.add('- Centros residenciales de personas mayores');

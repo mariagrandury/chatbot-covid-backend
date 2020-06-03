@@ -864,7 +864,9 @@ function educacion(agent) {
     bibliotecas(agent, fase);
     laboratorios(agent, fase);
     congresos(agent, fase);
-    centrosFormacion(agent, fase);
+    if (fase !== 1) {
+        centrosFormacion(agent, fase);
+    }
     agent.add('Recuerde respetar siempre las medidas de higiene y prevención establecidas.');
     agent.add('¿Tiene más dudas referentes a la fase ' + fase + '?');
     sugerenciasFases(agent, fase);
@@ -877,8 +879,10 @@ function bibliotecas(agent, fase) {
     }
     if (fase === 1) {
         agent.add('- Bibliotecas públicas y privadas para préstamo y devolución de obras, así como para lectura en sala con una reducción del aforo al 30%.');
-   } else if (fase === 2) {
+    } else if (fase === 2) {
         agent.add('- Bibliotecas públicas y privadas para préstamo y devolución de obras, así como para lectura en sala con una reducción del aforo al 30%. También se puede hacer uso de los ordenadores.');
+    } else if (fase === 3) {
+        agent.add('- Bibliotecas públicas y privadas para préstamo y devolución de obras, así como para lectura en sala con una reducción del aforo al 50%. También se puede hacer uso de los ordenadores y organizar actividades culturales.');
     }
 }
 function laboratorios(agent, fase = 0) {
@@ -894,10 +898,13 @@ function congresos(agent, fase = 0) {
         fase = setFase(agent);
         agent.add('En la fase ' + fase + ', se permite la realización de:');
     }
-    if (fase === 1) { // Cultura fase 1
+    if (fase === 1) {
         agent.add('- Congresos, encuentros, eventos y seminarios con un máximo de 30 asistentes y manteniendo la distancia física de dos metros. Deberá fomentarse la participación no presencial.');
-    } else if (fase === 2) {// Medidas sociales fase 2
+    } else if (fase === 2) {
         agent.add('- Congresos, encuentros, reuniones de negocio y conferencias promovidos por cualesquiera entidades de naturaleza pública o privada.');
+    } else if (fase === 3) {
+        agent.add('- Congresos, encuentros, reuniones de negocio y conferencias con un máximo de 80 asistentes.');
+        agent.add('- Actividades y talleres en el ámbito de la investigación, el desarrollo y la innovación con un máximo de 80 asistentes.');
     }
 }
 function centrosFormacion(agent, fase = 0) {
@@ -1282,11 +1289,11 @@ router.post('/', (request, response) => {
 
     intentMap.set('Servicios sociales', serviciosSociales); // D
 
-    intentMap.set('Educacion', educacion);
-    intentMap.set('Educacion - Bibliotecas', bibliotecas);
-    intentMap.set('Educacion - Laboratorios', laboratorios);
-    intentMap.set('Educacion - Congresos', congresos);
-    intentMap.set('Educacion - Centros formacion', centrosFormacion);
+    intentMap.set('Educacion', educacion); // D
+    intentMap.set('Educacion - Bibliotecas', bibliotecas); // D aforo
+    intentMap.set('Educacion - Laboratorios', laboratorios); // D
+    intentMap.set('Educacion - Congresos', congresos); // D
+    intentMap.set('Educacion - Centros formacion', centrosFormacion); // D
 
     intentMap.set('Cultura', cultura);
     intentMap.set('Cultura - Museos', museos);

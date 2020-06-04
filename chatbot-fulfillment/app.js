@@ -19,26 +19,30 @@ let noMatchMessages = [];
 let onInit = true;
 
 let provincia;
-let faseCliente = 2;
+let isla = false;
+let faseCliente;
+let faseCliente2;
+let fasePorDefecto = 2;
 let calificacion;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// TODO sugerencias
+// TODO elegir los putos emojis de una vez
+// TODO colores front
+// TODO build app
+// TODO mamá revisión
+// TODO enviar al trio calavera
 
 async function hola(agent) { // Wording: check
     console.log('CONVERSACION Intent: ' + agent.intent);
     if (onInit && agent.parameters.provincia) {
         provincia = agent.parameters.provincia;
         console.log('CONVERSACION Provincia: ' + provincia);
-        /*
         if (provincia) {
-            try {
-                await faseCliente = provinciasYfases();
-                console.log('CONVERSACION Return de provinciasYfases: ', faseCliente);
-                console.log('CONVERSACION Fase cliente: ', faseCliente);
-            } catch (err) {
-                console.log('CONVERSACION Hubo un problema al llamar provinciasYfases: ', err);
-            }
-        }*/
+            provinciasYfases();
+            console.log('CONVERSACION FaseCliente: ' + faseCliente);
+        }
         agent.add('Perfecto, muchas gracias.');
         agent.add('Le puedo explicar cómo interactuar conmigo si todavía no me conoce.');
         agent.add(new Suggestion('Explícame 😊 ')); // TODO emoji
@@ -116,6 +120,7 @@ function gracias(agent) {
 function adios(agent) {
     console.log('CONVERSACION Intent: ' + agent.intent);
     agent.add('Ha sido un placer ayudarle, ¡hasta pronto!');
+    onInit = true; provincia = ''; isla = false; faseCliente = ''; faseCliente2 = '';
 }
 
 function opinion(agent) {
@@ -461,18 +466,35 @@ const loQuePuedesHacerFase2Url = 'https://www.mscbs.gob.es/profesionales/saludPu
 const transicionFAQUrl = 'https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov-China/documentos/COVID19_Preguntas_y_respuestas_plan_nueva_normalidad.pdf';
 const transicionFase3Url = 'https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov-China/documentos/Plan_Transicion_Guia_Fase_3.pdf';
 
-function fases(agent) { // TODO wording
+function fases(agent) {
     console.log('CONVERSACION Intent: ' + agent.intent);
-    agent.add('Usted se encuentra en la fase ...'); // TODO fase del cliente
-    agent.add('¿Quiere que le informe sobre su fase u otra?');
+    if (provincia) {
+        if (faseCliente2) {
+            agent.add(faseCliente2);
+        } else if (isla) {
+            agent.add('Su isla, ' + provincia + ', se encuentra en la fase ' + faseCliente + '.');
+        } else {
+            agent.add('Su provincia, ' + provincia + ', se encuentra en la fase ' + faseCliente + '.');
+        }
+    }
+    agent.add('Si quiere conocer la fase de todas las provincias e islas haga click en el siguiente enlace:');
+    agent.add(new Card({
+            title: 'Mapa fases 1 Junio',
+            buttonText: 'Mapa fases 1 Junio',
+            buttonUrl: mapaTransicion1Junio
+        })
+    );
+    agent.add('¿Sobre qué quiere que le informe?');
     agent.add(new Suggestion('Situación actual 📅'));
     agent.add(new Suggestion('Situación actual en España'));
-    agent.add(new Suggestion('Mapa fases ')); // TODO emoji
-    agent.add(new Suggestion('Mapa fases desescalada'));
     agent.add(new Suggestion('Fase 1️⃣'));
     agent.add(new Suggestion('Información sobre la fase 1'));
     agent.add(new Suggestion('Fase 2️⃣'));
     agent.add(new Suggestion('Información sobre la fase 2'));
+    /*
+    agent.add(new Suggestion('Fase ')); // TODO añadir opción fase 3
+    agent.add(new Suggestion('Información sobre la fase 3'));
+     */
 }
 
 function situacionActual(agent) {
@@ -482,19 +504,6 @@ function situacionActual(agent) {
             title: 'Situación actual',
             buttonText: 'Situación actual',
             buttonUrl: situacionActualUrl
-        })
-    );
-    agent.add('¿En qué más le puedo ayudar?');
-    sugerenciasInicio(agent);
-}
-
-function mapaFases(agent) {
-    console.log('CONVERSACION Intent: ' + agent.intent);
-    agent.add('Si quiere conocer la fase de cada provincia haga click en el siguiente enlace:');
-    agent.add(new Card({
-            title: 'Mapa fases 1 Junio',
-            buttonText: 'Mapa fases 1 Junio',
-            buttonUrl: mapaTransicion1Junio
         })
     );
     agent.add('¿En qué más le puedo ayudar?');
@@ -544,6 +553,14 @@ function fase2(agent) {
     agent.add('No dude en plantearme dudas más concretas o elegir una de las categorías sugeridas.');
     sugerenciasFases(agent, 2);
 }
+
+/*
+function fase3(agent) {
+    console.log('CONVERSACION Funcion: Fase2');
+    agent.add('En la fase 3 está permitido:');
+
+}
+ */
 
 function sugerenciasFases(agent, fase) { // TODO seleccionar emojis
     agent.add(new Suggestion('🚗🙏'));
@@ -598,24 +615,6 @@ function masInfoFase3(agent) {
     agent.add(new Card({ title: 'Guía de la fase 3', buttonText: 'Guía de la fase 3', buttonUrl: transicionFase3Url }));
 }
 
-function faseCA(agent) { // TODO REVISAR da problemas !!
-    console.log('CONVERSACION Intent: ' + agent.intent);
-    let ca = '';
-    if (agent.parameters.ccaaFase0) {
-        ca = agent.parameters.ccaaFase0;
-        agent.add('La comunidad autónoma de ' + ca + ' está en la fase 0.');
-    } else if (agent.parameters.ccaaFase01) {
-        ca = agent.parameters.ccaaFase01;
-        agent.add('En la comunidad autónoma de ' + ca + ' hay provincias que están en la fase 0 y otras que han pasado a la 1.');
-    } else if (agent.parameters.ccaaFase1) {
-        ca = agent.parameters.ccaaFase2;
-        agent.add('La comunidad autónoma de ' + ca + ' está en la fase 2.');
-    } else {
-        agent.add('¿De qué comunidad autónoma quiere saber la fase?');
-    }
-    console.log('CONVERSACION Comunidad autónoma: ' + ca);
-}
-
 // ---------------------------------------------------------------------------------------------------------------------
 
 function setFase(agent) {
@@ -627,6 +626,9 @@ function setFase(agent) {
     } else if (faseCliente) {
         setfase = faseCliente;
         console.log('CONVERSACION faseCliente: ' + setfase);
+    } else {
+        setfase = fasePorDefecto;
+        console.log('CONVERSACION fasePorDefecto: ' + setfase);
     }
     return setfase;
 }
@@ -1121,7 +1123,7 @@ function tiempoLibre(agent, fase = 0) {
     }
     agent.add('- Actividades de tiempo libre para niños y jóvenes');
     agent.add('Al aire libre, el número de participantes se debe limitar al 50%, con un máximo de 200.');
-    agent.add('En espacios cerrados, se debe limitar a 1/3, con un máximo de 80 participantes.');
+    agent.add('En espacios cerrados se debe limitar a 1/3, con un máximo de 80 participantes.');
     agent.add('Durante el desarrollo de las actividades se deben realizar grupos de un máximo de 10 personas.');
 }
 
@@ -1160,29 +1162,56 @@ function telefonosInfo(agent) { // TODO FUTURO dar directamente el número de tl
 
 ////////////////////////////////////////////// PROVINCIAS Y FASES  /////////////////////////////////////////////////////
 
-/*
-async function provinciasYfases() {
-    console.log('CONVERSACION Function: provinciasYfases con ' + provincia);
-    let faseProv;
-    if (provincia) {
-        let rows;
-        try {
-            rows = await xlsxFile('chatbot-fulfillment/provincias.xlsx');
-            for (let i in rows) {
-                if (rows[i][0] == provincia) {
-                    console.log('CONVERSACION Function: provinciasYfases: provincia encontrada');
-                    faseProv = rows[i][1];
+const provinciasFase1 = ['Ávila', 'Burgos', 'Madrid', 'Palencia', 'Salamanca', 'Segovia', 'Soria', 'Valladolid', 'Zamora'];
+
+const provinciasFase2 = ['A Coruña', 'Albacete', 'Alicante', 'Almería', 'Álava', 'Asturias',
+    'Badajoz', 'Cádiz', 'Cáceres', 'Cantabria', 'Castellón', 'Ceuta', 'Ciudad Real', 'Córdoba', 'Cuenca',
+    'Gipúzcoa', 'Gerona', 'Granada', 'Guadalajara', 'Huelva', 'Huesca', 'Jaén',
+    'La Rioja', 'Lugo', 'Málaga', 'Melilla', 'Murcia', 'Navarra', 'Orense',
+    'Pontevedra', 'Tarragona', 'Teruel', 'Toledo', 'Valencia', 'Vizcaya', 'Zaragoza',
+    'La Palma', 'Tenerife', 'Fuerteventura', 'Gran Canaria', 'Lanzarote', 'Mallorca', 'Menorca', 'Cabrera', 'Ibiza'];
+
+const provinciasFase3 = ['El Hierro', 'La Gomera', 'La Graciosa', 'Formentera'];
+
+const islas = [
+    /* Provincia de Santa Cruz de Tenerife: */ 'El Hierro', 'La Gomera', 'La Palma', 'Tenerife',
+    /* Provincia de Las Palmas: */ 'Fuerteventura', 'Gran Canaria', 'Lanzarote', 'La Graciosa',
+    /* Baleares: */ 'Mallorca', 'Menorca', 'Cabrera', 'Ibiza', 'Formentera'
+];
+
+function provinciasYfases() {
+    for (let i = 0; i<provinciasFase1.length; i++) {
+        if (provinciasFase1[i] === provincia) { faseCliente = 1; }
+        else { for (let i = 0; i<provinciasFase2.length; i++) {
+                if (provinciasFase2[i] === provincia) { faseCliente = 2; }
+                else { for (let i = 0; i<provinciasFase3.length; i++) {
+                        if (provinciasFase3[i] === provincia) { faseCliente = 3; }
+                        else {
+                            if (provincia === 'León') { faseCliente2 = 'Su provincia, León, se encuentra en la fase 1, exceptuando el área sanitaria de El Bierzo (El Bierzo y Laciana) que ha pasado a la 2.'; }
+                            if (provincia === 'Barcelona' || provincia === 'Lérida') {
+                                faseCliente2 = 'Su comunidad autónoma, Cataluña, se encuentra en la fase 1, exceptuando las áreas sanitarias de Gerona, Cataluña Central Alt Penedès y El Garraf que han pasado a la 2.'; }
+                        }
+                    }
                 }
             }
-            console.log(provincia);
-            console.log(faseProv);
-        } catch(err) {
-            console.log('Function: provinciasYfases: ha ocurrido un problema al leer el excel' + err);
         }
     }
-    return faseProv;
+    for (let i = 0; i<islas.length; i++) {
+        if (islas[i] === provincia) {
+            isla = true;
+        }
+    }
 }
-*/
+
+
+// ---------------------------------------------------------------------------------------------------------------------
+
+const ccaa = ['Galicia'];
+const islasCanarias = [
+    /*Provincia de Santa Cruz de Tenerife: */ 'El Hierro', 'La Gomera', 'La Palma', 'Tenerife',
+    /*Provincia de Las Palmas: */ 'Fuerteventura', 'Gran Canaria', 'Lanzarote', 'La Graciosa'];
+const islasBaleares = ['Mallorca', 'Menorca', 'Cabrera', 'Ibiza', 'Formentera'];
+
 
 
 // -------------------------------------------------- TESTS ------------------------------------------------------------
@@ -1306,10 +1335,8 @@ router.post('/', (request, response) => {
 
     intentMap.set('Fases', fases);
     intentMap.set('Situacion actual', situacionActual);
-    intentMap.set('Fases - Mapa', mapaFases);
     intentMap.set('Fases - Informacion', fasesInformacion);
     intentMap.set('Fases - Mas informacion', fasesMasInformacion);
-    intentMap.set('Fases - CA', faseCA);
 
     // Añadir "aforo" en dialogfow
     intentMap.set('Medidas sociales', medidasSociales); // D W

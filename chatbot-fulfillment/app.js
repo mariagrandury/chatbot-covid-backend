@@ -37,7 +37,7 @@ async function hola(agent) {
         }
         agent.add('Perfecto, muchas gracias.');
         agent.add('Le puedo explicar cómo interactuar conmigo si todavía no me conoce.');
-        agent.add(new Suggestion('Explícame 😊 ')); // TODO emoji
+        agent.add(new Suggestion('Me presento 😊 '));
         agent.add(new Suggestion('Explicación de quién soy y cómo le puedo ayudar'));
         onInit = false;
         sugerenciasInicio(agent);
@@ -50,8 +50,9 @@ async function hola(agent) {
 
 function explicacion(agent) {
     console.log('CONVERSACION Intent: ' + agent.intent);
-    agent.add('Mi creadora es María Grandury, soy su Trabajo Fin de Grado.'); // TODO Aurora mi bebé
-    // agent.add('Todavía estoy aprendiendo, por lo que agradecería mucho su opinión cuando finalice nuestra conversación.');
+    agent.add('Mi creadora es María Grandury, soy su Trabajo Fin de Grado.');
+    agent.add('Le ofrezco información detallada sobre la COVID-19. Toda ella procede de la página oficial del Ministerio de Sanidad.');
+     agent.add('Agradecería mucho su opinión cuando finalice nuestra conversación para seguir mejorando.');
     agent.add('Puedo aclararle sus dudas respecto a:');
     agent.add('🌡️ Los síntomas de la COVID-19 y cómo actuar si los presenta.');
     agent.add('🧼 Las medidas de higiene que debe respetar para su seguridad.');
@@ -59,7 +60,6 @@ function explicacion(agent) {
     agent.add('📉 La evolución de la pandemia en España y las características de las diferentes fases del plan de transición a una nueva normalidad.');
     agent.add('Puede plantearme sus dudas escribiendo en su teclado o seleccionar alguna de las sugerencias que le propongo.');
     agent.add('En todo momento puede escribir \"Menú\" para volver al menú inicial.');
-    agent.add('Toda la información la he recogido de la página oficial del Ministerio de Sanidad.');
     agent.add('Dicho esto, ¿en qué puedo ayudarle?');
     sugerenciasInicio(agent);
 }
@@ -92,13 +92,13 @@ function fallback(agent) {
     console.log('CONVERSACION Intent: ' + agent.intent);
     const respuestasPosibles = [
         'No he entendido a qué se refiere, ¿puede reformular su pregunta?',
-        '¿Podría repetir su pregunta, por favor?',
+        '¿Podría repetir su pregunta con otras palabras, por favor?',
         'Disculpe, no he entendido su petición. Reformule su duda.',
         'Perdone, no entiendo su pregunta. ¿Puede reformularla?',
-        '¿Cómo?  Formule de otra manera su pregunta, por favor.'
+        '¿Cómo? Formule de otra manera su pregunta, por favor.'
     ];
     agent.add(respuestasPosibles[Math.floor(Math.random() * respuestasPosibles.length)]);
-    agent.add('También puede buscar su pregunta en el siguiente pdf:'); // TODO wording seguiré estudiando para poder ofrecer mejor información? algo así no sé
+    agent.add('También puede buscar su pregunta en el siguiente pdf:');
     agent.add(new Card({
             title: 'Preguntas frecuentes',
             buttonText: 'Preguntas frecuentes',
@@ -110,7 +110,7 @@ function fallback(agent) {
 function gracias(agent) {
     console.log('CONVERSACION Intent: ' + agent.intent);
     agent.add('De nada, es un placer. ¿Puedo hacer algo más por usted?');
-    agent.add('Si no tiene más dudas, puede darme su opinión sobre su experiencia hablando conmigo.'); // TODO wording
+    agent.add('Si no tiene más dudas, puede darme su opinión sobre su experiencia hablando conmigo.');
     sugerenciasInicio(agent);
     agent.add(new Suggestion('Opinión ⭐'));
     agent.add(new Suggestion('Ayúdeme a mejorar dándome su opinión'));
@@ -332,7 +332,7 @@ function medidasHigiene(agent) {
     agent.add('Las medidas de higiene y prevención establecidas por las autoridades sanitarias incluyen:'); // pdf fase 1
     agent.add('- Mantener una distancia interpersonal de 2 metros');
     agent.add('- Lavarse las manos frecuentemente con gel hidroalcohólico o agua y jabón');
-    agent.add('- Usar de mascarilla en la vía pública');
+    agent.add('- Usar mascarilla en la vía pública');
     agent.add('- Evitar tocarse los ojos, la nariz y la boca');
     agent.add('- Si tose o estornuda, cubrirse boca y nariz con el codo');
     agent.add('- Usar pañuelos desechables');
@@ -649,10 +649,10 @@ function fase2(agent) {
 
 function fase3(agent) {
     console.log('CONVERSACION Funcion: Fase3');
-    agent.add('En la fase 3 se permite, entre otros:');
-    agent.add('- Circular por su provincia o isla en grupos de hasta 20 personas. Se eliminan las franjas horarias para todos los colectivos.');
-    agent.add('- Apertura de locales comerciales con un aforo máximo del 50%.');
-    agent.add('- Apertura de restaurantes para consumo en el local, con un aforo máximo del 50%. En las terrazas el aforo máximo es del 75%.');
+    agent.add('En la fase 3 puede, entre otros:');
+    agent.add('- Circular por su provincia o isla en grupos de hasta 20 personas y sin franjas horarias.');
+    agent.add('- Comprar en tiendas, donde el aforo está limitado al 50%.');
+    agent.add('- Ir a bares y restaurantes para consumir en el local, con un aforo máximo del 50%, o en las terrazas, aforo máximo del 75%.');
     agent.add('No dude en plantearme dudas más concretas o elegir una de las categorías sugeridas.');
     sugerenciasFases(agent, 3);
 }
@@ -809,6 +809,43 @@ function bodas(agent, fase = 0) {
     }
 }
 
+
+function segundaResidencia(agent) {
+    console.log('CONVERSACION Intent: ' + agent.intent);
+    agent.add('Desde la fase 2 puede ir a su segunda residencia siempre que se encuentre dentro de la provincia en la que se ubica su domicilio habitual.');
+    agent.add('Sin embargo, hasta superar la fase 3 no se permite viajar a provincias diferentes a aquella en la que reside, salvo por las causas justificadas.');
+    agent.add('Debe esperar hasta que ambas provincias hayan superado la fase 3 y se entre en la nueva normalidad.');
+    agent.add('¿Le puedo ayudar en algo más?');
+    sugerenciasFases(agent);
+}
+function cambioDeProvincia(agent) {
+    console.log('CONVERSACION Intent: ' + agent.intent);
+    agent.add('Por regla general, los desplazamientos entre provincias no están permitidos hasta que no finalice el proceso de transición hacia la nueva normalidad.');
+    agent.add('Sin embargo, sí se pueden realizar por motivos:');
+    agent.add('- Sanitarios');
+    agent.add('- Laborales, profesionales o empresariales');
+    agent.add('- Retorno al lugar de residencia familiar');
+    agent.add('- Asistencia y cuidado de mayores, dependientes o personas con discapacidad');
+    agent.add('- Causa de fuerza mayor o situación de necesidad');
+    agent.add('¿Le puedo ayudar en algo más?');
+    sugerenciasFases(agent);
+}
+function grupos(agent) {
+    console.log('CONVERSACION Intent: ' + agent.intent);
+    agent.add('Desde la fase 1 se permite el contacto social entre personas sin ninguna patología previa y que no sean vulnerables.');
+    agent.add('El número máximo de personas por grupo es:');
+    agent.add('- 10 en la fase 1');
+    agent.add('- 15 en la fase 2');
+    agent.add('- 20 en la fase 3');
+    agent.add('¿Le puedo ayudar en algo más?');
+    sugerenciasFases(agent);
+}
+function transportePublico(agent) { // TODO check
+    console.log('CONVERSACION Intent: ' + agent.intent);
+    agent.add('En el transporte público como un taxi es imprescindible el uso de mascarillas ya que no es posible garantizar la distancia social.');
+    agent.add('¿Le puedo ayudar en algo más?');
+    sugerenciasFases(agent);
+}
 
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -977,12 +1014,13 @@ function educacion(agent) {
     congresos(agent, fase);
     if (fase !== 1) {
         centrosFormacion(agent, fase);
+        agent.add('Además, se permite a alumnado no universitario volver a la educación presencial de manera voluntaria. Pregúnteme si quiere más información.');
     }
     agent.add('Recuerde respetar siempre las medidas de higiene y prevención establecidas.');
     agent.add('¿Tiene más dudas referentes a la fase ' + fase + '?');
     sugerenciasFases(agent, fase);
 }
-function bibliotecas(agent, fase) {
+function bibliotecas(agent, fase = 0) {
     console.log('CONVERSACION Intent: ' + agent.intent);
     if (fase === 0) {
         fase = setFase(agent);
@@ -1029,6 +1067,20 @@ function centrosFormacion(agent, fase = 0) {
     }
     agent.add('- Centros educativos no universitarios y de formación.');
     agent.add('- Academias y autoescuelas, limitando su aforo a 1/3 y priorizando la formación online.');
+}
+function educacionPresencial(agent, fase = 0) { // TODO check
+    console.log('CONVERSACION Intent: ' + agent.intent);
+    if (fase === 0) {
+        agent.add('A partir de la fase 2, pueden volver a la educación presencial de manera voluntaria:');
+        sugerenciasFases(agent, fase);
+    }
+    agent.add('- Los menores de educación infantil y primaria (de 0 a 6 años), si sus progenitores acreditan que deben trabajar fuera de casa.');
+    agent.add('- Estudiantes de las etapas de fin de ciclo (4º de ESO, 2º BACH y 2º FP) en grupos de 15 por aula.');
+    agent.add('- Alumnos de cualquier etapa educativa (Primaria, ESO, BACH y FP) que, a juicio del claustro de profesores, necesitan actividades de refuerzo educativo. Siempre en grupos de 15.');
+    agent.add('- Alumnados de centros de educación especial.');
+    agent.add('- Alumnos que vayan a realizar la EBAU.');
+    agent.add('¿Le puedo ayudar en algo más?');
+    sugerenciasFases(agent, fasePorDefecto);
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -1132,6 +1184,16 @@ function competicion(agent, fase = 0) {
     agent.add('- Competiciones de Ligas Profesionales, sin público y a puerta cerrada.');
     agent.add('Se permite la entrada de medios de comunicación para la retransmisión de la competición.');
 }
+function entrenamientoYcompeticion(agent, fase = 0) {
+    console.log('CONVERSACION Intent: ' + agent.intent);
+    if (fase === 0) {
+        fase = setFase(agent);
+        agent.add('A partir de la fase 2 se permite la reanudación de:');
+        sugerenciasFases(agent, fase);
+    }
+    entrenamiento(agent, fase);
+    competicion(agent, fase);
+}
 function piscinasDeportivas(agent, fase = 0) {
     console.log('CONVERSACION Intent: ' + agent.intent);
     if (fase === 0) {
@@ -1210,7 +1272,7 @@ function piscinasYplayas(agent) {
 }
 function piscinasRecreativas(agent, fase = 0) {
     if (fase === 0) {
-        agent.add('En la fase 2 se permite la reapertura de:');
+        agent.add('A partir de la fase 2 se permite la reapertura de:');
         sugerenciasFases(agent, fase);
     }
     agent.add('- Piscinas recreativas, con un aforo de un 30% y pidiendo cita previamente.');
@@ -1218,7 +1280,7 @@ function piscinasRecreativas(agent, fase = 0) {
 }
 function playas(agent, fase = 0) {
     if (fase === 0 ) {
-        agent.add('En la fase 2 se permite el acceso a:');
+        agent.add('A partir de la fase 2 se permite el acceso a:');
         sugerenciasFases(agent, fase);
     }
     agent.add('- Playas de su misma provincia o isla, en grupos de máximo 15 personas y con las limitaciones de acceso establecidas por cada ayuntamiento.');
@@ -1251,16 +1313,34 @@ function juegosYapuestas(agent, fase = 0) {
 // https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov-China/ciudadania.htm
 const telefonosInfoUrl = 'https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov-China/telefonos.htm';
 
-function telefonosInfo(agent) { // TODO FUTURO dar directamente el número de tlf de la ca
+function telefonosInfo(agent) { // TODO
     console.log('CONVERSACION Intent: ' + agent.intent);
-    /*
-    let ca = agent.parameters.ca;
+
     let tlf;
-    if (ca === 'Asturias') {
-        tlf = '900 878 232'; // 984 100 400 / 112 marcando 1
-    }
-    agent.add('El teléfono de información en ' + ca + ' es ' + tlf + '.');
-    */
+
+    if (provincia === 'Huelva' || provincia === 'Sevilla' || provincia === 'Córdoba' || provincia === 'Jaén' || provincia === 'Granada' || provincia === 'Almería' || provincia === 'Málaga' || provincia === 'Cádiz') { tlf = '900 400 061 / 955 545 060'; }
+    if (provincia === 'Huesca' || provincia === 'Zaragoza' || provincia === 'Teruel') { tlf = '976 696 382'; }
+    if (provincia === 'Asturias') {tlf = '900 878 232 / 984 100 400 / 112 marcando 1'; }
+    if (provincia === 'Cantabria') { tlf = '900 612 112'; }
+    if (provincia === 'Toledo' || provincia === 'Ciudad Real' || provincia === 'Cuenca' || provincia === 'Guadalajara' || provincia === 'Albacete') { tlf = '900 122 112'; }
+    if (provincia === 'León' || provincia === 'Zamora' || provincia === 'Salamanca' || provincia === 'Valladolid' || provincia === 'Palencia' || provincia === 'Burgos' || provincia === 'Soria' || provincia === 'Segovia' || provincia === 'Ávila') { tlf = '900 222 000'; }
+    if (provincia === 'Lérida' || provincia === 'Gerona' || provincia === 'Barcelona' || provincia === 'Tarragona') { tlf = '061'; }
+    if (provincia === 'Ceuta') { tlf = '900 720 692'; }
+    if (provincia === 'Madrid') { tlf = '900 102 112'; }
+    if (provincia === 'Castellón' || provincia === 'Valencia' || provincia === 'Alicante') { tlf = '900 300 555'; }
+    if (provincia === 'Cáceres' || provincia === 'Badajoz') { tlf = '112'; }
+    if (provincia === 'A Coruña' || provincia === 'Lugo' || provincia === 'Pontevedra' || provincia === 'Orense') { tlf = '900 400 116'; }
+    if (provincia === 'Mallorca' || provincia === 'Menorca' || provincia === 'Cabrera' || provincia === 'Ibiza' || provincia === 'Formentera') { tlf = '061'; }
+    if (provincia === 'El Hierro' || provincia === 'La Gomera' || provincia === 'La Palma' || provincia === 'Tenerife' || provincia === 'Fuerteventura' || provincia === 'Gran Canaria' || provincia === 'Lanzarote' || provincia === 'La Graciosa') { tlf = '900 112 061'; }
+    if (provincia === 'La Rioja') { tlf = '941 298 333'; }
+    if (provincia === 'Melilla') { tlf = '112'; }
+    if (provincia === 'Murcia') { tlf = '900 121 212'; }
+    if (provincia === 'Navarra') { tlf = '948 290 290'; }
+    if (provincia === 'Vizcaya' || provincia === 'Guipúzcoa' || provincia === 'Álava') { tlf = '900 203 050'; }
+
+    agent.add('El teléfono en su comunidad autónoma es:');
+    agent.add(tlf);
+
     agent.add('Haga click en el siguiente enlace para acceder a la lista de teléfonos de información sobre la COVID-19:');
     agent.add(new Card({
             title: 'Teléfonos COVID-19',
@@ -1461,6 +1541,10 @@ router.post('/', (request, response) => {
     intentMap.set('Medidas sociales - Velatorios', velatorios); // D
     intentMap.set('Medidas sociales - Culto', culto); // D
     intentMap.set('Medidas sociales - Bodas', bodas); // D
+    intentMap.set('Medidas sociales - Segunda residencia', segundaResidencia);
+    intentMap.set('Medidas sociales - Cambio provincia', cambioDeProvincia);
+    intentMap.set('Medidas sociales - Grupos', grupos);
+    intentMap.set('Medidas sociales - Transporte publico', transportePublico);
 
     intentMap.set('Comercio', comercio); // D
     intentMap.set('Comercio - Locales', locales); // D
@@ -1482,6 +1566,7 @@ router.post('/', (request, response) => {
     intentMap.set('Educacion - Laboratorios', laboratorios); // D
     intentMap.set('Educacion - Congresos', congresos); // D
     intentMap.set('Educacion - Centros formacion', centrosFormacion); // D
+    intentMap.set('Educacion - Educacion presencial', educacionPresencial);
 
     intentMap.set('Cultura', cultura); // D
     intentMap.set('Cultura - Museos', museos); // D aforo
@@ -1490,6 +1575,7 @@ router.post('/', (request, response) => {
     intentMap.set('Deporte', deporte); // D
     intentMap.set('Deporte - Entrenamiento', entrenamiento); // D aforo
     intentMap.set('Deporte - Competicion', competicion); // D aforo
+    intentMap.set('Deporte - Entrenamiento y competicion', entrenamientoYcompeticion);
     intentMap.set('Deporte - Piscinas deportivas', piscinasDeportivas); // D aforo
     intentMap.set('Deporte - Turismo activo', turismoActivo); // D
 

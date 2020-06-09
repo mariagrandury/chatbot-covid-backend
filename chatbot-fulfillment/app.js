@@ -20,7 +20,7 @@ let provincia;
 let isla = false;
 let faseCliente;
 let faseCliente2;
-let fasePorDefecto = 2;
+let fasePorDefecto = 3;
 let calificacion;
 let opiniones = [];
 
@@ -59,6 +59,7 @@ function explicacion(agent) {
     agent.add('🧾 Las medidas de prevención que se deben adoptar en diferentes espacios, como restaurantes, centros culturales, hoteles, piscinas y playas.');
     agent.add('📉 La evolución de la pandemia en España y las características de las diferentes fases del plan de transición a una nueva normalidad.');
     agent.add('Puede plantearme sus dudas escribiendo en su teclado o seleccionar alguna de las sugerencias que le propongo.');
+    agent.add('Para ver aclaraciones sobre los emoticonos de dichas sugerencias, mantenga pulsado sobre ellos.');
     agent.add('En todo momento puede escribir \"Menú\" para volver al menú inicial.');
     agent.add('Dicho esto, ¿en qué puedo ayudarle?');
     sugerenciasInicio(agent);
@@ -80,6 +81,8 @@ function sugerenciasInicio(agent) {
     agent.add(new Suggestion('Medidas de seguridad adoptadas'));
     agent.add(new Suggestion('Evolución 📉'));
     agent.add(new Suggestion('Situacíon actual y fases de la desescalada'));
+    agent.add(new Suggestion('Internacional 🌍'));
+    agent.add(new Suggestion('Estadísticas de la COVID-19 en el mundo'));
 }
 
 function menu(agent) {
@@ -549,7 +552,7 @@ function medidasJuegosYapuestas(agent) {
 // --------------------------- PLAN PARA LA TRANSICIÓN A UNA NUEVA NORMALIDAD ------------------------------------------
 
 const situacionActualUrl = 'https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov-China/situacionActual.htm';
-const mapaTransicion1Junio = 'https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov-China/img/Mapa_de_Transicion_hacia_la_nueva_normalidad.jpg';
+const mapaTransicion8Junio = 'https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov-China/img/Mapa_de_Transicion_hacia_la_nueva_normalidad.jpg';
 const transicionFase1Url = 'https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov-China/documentos/09052020_Plan_Transicion_Guia_Fase_1.pdf';
 const loQuePuedesHacerFase1Url = 'https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov-China/img/Esto_es_lo_que_puedes_hacer_Fase-1.jpg';
 const transicionFase2Url = 'https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov-China/documentos/Plan_Transicion_Guia_Fase_2.pdf';
@@ -570,9 +573,9 @@ function fases(agent) {
     }
     agent.add('Si quiere conocer la fase de todas las provincias e islas haga click en el siguiente enlace:');
     agent.add(new Card({
-            title: 'Mapa fases 1 Junio',
-            buttonText: 'Mapa fases 1 Junio',
-            buttonUrl: mapaTransicion1Junio
+            title: 'Mapa fases 8 Junio',
+            buttonText: 'Mapa fases 8 Junio',
+            buttonUrl: mapaTransicion8Junio
         })
     );
     agent.add('¿Sobre qué quiere que le informe?');
@@ -676,7 +679,7 @@ function sugerenciasFases(agent, fase) {
     if (fase === 3) {
         sugJuegosYapuestas(agent);
         sugTiempoLibre(agent);
-        sugMasInfo3();
+        sugMasInfo3(agent);
     }
 }
 
@@ -840,9 +843,9 @@ function grupos(agent) {
     agent.add('¿Le puedo ayudar en algo más?');
     sugerenciasFases(agent);
 }
-function transportePublico(agent) { // TODO check
+function transportePublico(agent) {
     console.log('CONVERSACION Intent: ' + agent.intent);
-    agent.add('En el transporte público como un taxi es imprescindible el uso de mascarillas ya que no es posible garantizar la distancia social.');
+    agent.add('Tanto en transporte público como en un taxi es imprescindible el uso de mascarillas.');
     agent.add('¿Le puedo ayudar en algo más?');
     sugerenciasFases(agent);
 }
@@ -976,9 +979,15 @@ function barra(agent, fase = 0) {
 function discotecas(agent, fase = 0) {
     console.log('CONVERSACION Intent: ' + agent.intent);
     if (fase === 0) {
+        fase = setFase(agent);
         sugerenciasFases(agent, fase);
     }
-    agent.add('No se permite la reapertura de discotecas y bares de ocio nocturno.');
+    if (fase === 3) {
+        agent.add('A partir de la fase 3, se permite la reapertura de:');
+        agent.add('- Discotecas y bares de ocio nocturno, con el aforo limitado al 33%.');
+    } else {
+        agent.add('No se permite la reapertura de discotecas y bares de ocio nocturno.');
+    }
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -1068,7 +1077,7 @@ function centrosFormacion(agent, fase = 0) {
     agent.add('- Centros educativos no universitarios y de formación.');
     agent.add('- Academias y autoescuelas, limitando su aforo a 1/3 y priorizando la formación online.');
 }
-function educacionPresencial(agent, fase = 0) { // TODO check
+function educacionPresencial(agent, fase = 0) {
     console.log('CONVERSACION Intent: ' + agent.intent);
     if (fase === 0) {
         agent.add('A partir de la fase 2, pueden volver a la educación presencial de manera voluntaria:');
@@ -1132,7 +1141,7 @@ function espectaculos(agent, fase = 0) {
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-function deporte(agent) { // TODO dar menos información si preguntan por deporte en general, hay demasiada info en deportes 2 y 3
+function deporte(agent) { // POSIBLE: dar menos información si preguntan por deporte en general, hay demasiada info en deportes 2 y 3
     console.log('CONVERSACION Intent: ' + agent.intent);
     let fase = setFase(agent);
     if (fase === 1) {
@@ -1309,11 +1318,11 @@ function juegosYapuestas(agent, fase = 0) {
     agent.add('- Establecimientos y locales de juegos y apuestas, con un aforo limitado al 50% sin poder superar las 50 personas en total en el local.');
 }
 
-// ------------------------------------- INFORMACIÓN PARA LA CIUDADANÍA ------------------------------------------------
+//////////////////////////////////////// INFORMACIÓN PARA LA CIUDADANÍA ////////////////////////////////////////////////
 // https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov-China/ciudadania.htm
 const telefonosInfoUrl = 'https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov-China/telefonos.htm';
 
-function telefonosInfo(agent) { // TODO
+function telefonosInfo(agent) {
     console.log('CONVERSACION Intent: ' + agent.intent);
 
     let tlf;
@@ -1355,16 +1364,23 @@ function telefonosInfo(agent) { // TODO
 
 ////////////////////////////////////////////// PROVINCIAS Y FASES  /////////////////////////////////////////////////////
 
-const provinciasFase1 = ['Ávila', 'Burgos', 'Madrid', 'Palencia', 'Salamanca', 'Segovia', 'Soria', 'Valladolid', 'Zamora'];
+const provinciasFase2 = ['Ceuta', 'Madrid',
+    'Ávila', 'Burgos', 'Palencia', 'Salamanca', 'Segovia', 'Soria', 'Valladolid', 'Zamora',
+    'Alicante', 'Castellón', 'Valencia',
+    'Barcelona', 'Lérida', 'Gerona',
+    'Albacete', 'Ciudad Real', 'Toledo'
+];
 
-const provinciasFase2 = ['A Coruña', 'Albacete', 'Alicante', 'Almería', 'Álava', 'Asturias',
-    'Badajoz', 'Cádiz', 'Cáceres', 'Cantabria', 'Castellón', 'Ceuta', 'Ciudad Real', 'Córdoba', 'Cuenca',
-    'Gipúzcoa', 'Gerona', 'Granada', 'Guadalajara', 'Huelva', 'Huesca', 'Jaén',
-    'La Rioja', 'Lugo', 'Málaga', 'Melilla', 'Murcia', 'Navarra', 'Orense',
-    'Pontevedra', 'Tarragona', 'Teruel', 'Toledo', 'Valencia', 'Vizcaya', 'Zaragoza',
-    'La Palma', 'Tenerife', 'Fuerteventura', 'Gran Canaria', 'Lanzarote', 'Mallorca', 'Menorca', 'Cabrera', 'Ibiza'];
-
-const provinciasFase3 = ['El Hierro', 'La Gomera', 'La Graciosa', 'Formentera'];
+const provinciasFase3 = ['El Hierro', 'La Gomera', 'La Graciosa', 'Formentera',
+    'La Palma', 'Tenerife', 'Fuerteventura', 'Gran Canaria', 'Lanzarote', 'Mallorca', 'Menorca', 'Cabrera', 'Ibiza',
+    'Cantabria', 'Navarra', 'La Rioja', 'Asturias', 'Murcia', 'Melilla', 'Asturias', 'Asturias',
+    'A Coruña', 'Lugo', 'Orense', 'Pontevedra',
+    'Álava', 'Vizcaya', 'Gipúzcoa',
+    'Cáceres', 'Badajoz',
+    'Huesca', 'Zaragoza', 'Teruel',
+    'Huelva', 'Sevilla', 'Córdoba', 'Jaén', 'Granada', 'Almería', 'Málaga', 'Cádiz',
+    'Cuenca', 'Guadalajara'
+];
 
 const islas = [
     /* Provincia de Santa Cruz de Tenerife: */ 'El Hierro', 'La Gomera', 'La Palma', 'Tenerife',
@@ -1373,22 +1389,15 @@ const islas = [
 ];
 
 function provinciasYfases() {
-    for (let i = 0; i<provinciasFase1.length; i++) {
-        if (provinciasFase1[i] === provincia) { faseCliente = 1; }
-        else { for (let i = 0; i<provinciasFase2.length; i++) {
-                if (provinciasFase2[i] === provincia) { faseCliente = 2; }
-                else { for (let i = 0; i<provinciasFase3.length; i++) {
-                        if (provinciasFase3[i] === provincia) { faseCliente = 3; }
-                        else {
-                            if (provincia === 'León') { faseCliente2 = 'Su provincia, León, se encuentra en la fase 1, exceptuando el área sanitaria de El Bierzo (El Bierzo y Laciana) que ha pasado a la 2.'; }
-                            if (provincia === 'Barcelona' || provincia === 'Lérida') {
-                                faseCliente2 = 'Su comunidad autónoma, Cataluña, se encuentra en la fase 1, exceptuando las áreas sanitarias de Gerona, Cataluña Central Alt Penedès y El Garraf que han pasado a la 2.'; }
-                        }
-                    }
-                }
+    for (let i = 0; i<provinciasFase2.length; i++) {
+        if (provinciasFase2[i] === provincia) { faseCliente = 2; }
+        else { for (let i = 0; i<provinciasFase3.length; i++) {
+            if (provinciasFase3[i] === provincia) { faseCliente = 3; }
+            else if (provincia === 'Tarragona') {faseCliente2 = 'Su provincia, Tarragona, se encuentra en la fase 2, exceptuando Alt Pirineu i Aran, Terres de l\'Ebre y Camp de Tarragona que han pasado a la 3.'; }
             }
         }
     }
+
     for (let i = 0; i<islas.length; i++) {
         if (islas[i] === provincia) {
             isla = true;
@@ -1397,14 +1406,36 @@ function provinciasYfases() {
 }
 
 
-// ---------------------------------------------------------------------------------------------------------------------
+///////////////////////////////////////////////// INTERNACIONAL ////////////////////////////////////////////////////////
+// Estadísticas de la COVID-19 en el mundo (info: OMS)
 
-const ccaa = ['Galicia'];
-const islasCanarias = [
-    /*Provincia de Santa Cruz de Tenerife: */ 'El Hierro', 'La Gomera', 'La Palma', 'Tenerife',
-    /*Provincia de Las Palmas: */ 'Fuerteventura', 'Gran Canaria', 'Lanzarote', 'La Graciosa'];
-const islasBaleares = ['Mallorca', 'Menorca', 'Cabrera', 'Ibiza', 'Formentera'];
-
+function internacional(agent) { // TODO poner banderas
+    agent.add('Los 10 países con más afectados por la COVID-19 son los siguientes.');
+    agent.add('Los datos corresponden al 8 de junio.');
+    agent.add('A: Afectados, F: Fallecidos, C: Curados');
+    agent.add('1. EEUU:');
+    agent.add('A: 1.942.363 - F: 110.514 - C: 506.367');
+    agent.add('2. Brasil:');
+    agent.add('A: 691.758 - F: 36.455 - C: 283.952');
+    agent.add('3. Rusia:');
+    agent.add('A: 467.073 - F: 5.851 - C: 226.272');
+    agent.add('4. Reino Unido:');
+    agent.add('A: 467.073 - F: 40.625 - C 1.239');
+    agent.add('5. India:');
+    agent.add('A: 257.486 - F: 7.207 - C: 123.848');
+    agent.add('6. España:');
+    agent.add('A: 241.550 - F:27.136 - C: 150.376');
+    agent.add('7. Italia:');
+    agent.add('A: 234.998 - F: 33.899 - C: 165.837');
+    agent.add('8. Perú:');
+    agent.add('A: 196.515 - F: 5.465 - C: 86.219');
+    agent.add('9. Francia:');
+    agent.add('A: 191.102 - F: 29.158 - C: 70.961');
+    agent.add('10. Alemania:');
+    agent.add('A: 185.750 - F: 8.685 - C: 169.224');
+    agent.add('¿Le puedo ayudar en algo más?');
+    sugerenciasInicio(agent);
+}
 
 
 // -------------------------------------------------- TESTS ------------------------------------------------------------
@@ -1589,6 +1620,7 @@ router.post('/', (request, response) => {
     intentMap.set('Juegos y apuestas', juegosYapuestas); // D aforo
 
     intentMap.set('Telefonos informacion', telefonosInfo);
+    intentMap.set('Internacional', internacional);
 
     agent.handleRequest(intentMap);
 });

@@ -584,11 +584,12 @@ function fases(agent) {
     if (nuevaNormalidad) {
         if (provincia) {
             if (isla) {
-                agent.add('Su isla, ' + provincia + ', se encuentra en la nueva normalidad.');
+                agent.add('Actualmente la transmisión en el país ha descendido y su isla, ' + provincia + ', se encuentra en la nueva normalidad.');
             } else {
-                agent.add('Su provincia, ' + provincia + ', se encuentra en la nueva normalidad.');
+                agent.add('Actualmente la transmisión en el país ha descendido y su provincia, ' + provincia + ', se encuentra en la nueva normalidad.');
             }
         }
+        agent.add('Han terminado las restricciones sociales y económicas, pero se mantiene la vigilancia epidemiológica, la capacidad reforzada del sistema sanitario y la autoprotección de la ciudadanía.');
     }
         /*if (provincia) {
             if (faseCliente2) {
@@ -647,15 +648,15 @@ function fasesInformacion(agent) {
 
 function fase1(agent) {
     console.log('CONVERSACION Function: Fase1');
-    agent.add('En la fase 1 puede, entre otros:');
+    agent.add('En la fase 1 se podía, entre otros:');
     agent.add('- Circular por su provincia o isla en grupos de hasta 10 personas.');
-    agent.add('- Comprar en mercadillos y tiendas de hasta 400m2, donde el aforo está limitado al 30%.');
+    agent.add('- Comprar en mercadillos y tiendas de hasta 400m2, donde el aforo estaba limitado al 30%.');
     agent.add('- Ir a terrazas al aire libre limitadas al 50% de las mesas.');
     agent.add('- Acudir a lugares de culto.');
     agent.add('- Pasear y hacer deporte al aire libre.');
     agent.add(new Card({
-            title: 'Qué puedo hacer en la fase 1',
-            buttonText: 'Qué puedo hacer en la fase 1',
+            title: 'Qué se podía hacer en la fase 1',
+            buttonText: 'Qué se podía hacer en la fase 1',
             buttonUrl: loQuePuedesHacerFase1Url
         })
     );
@@ -665,15 +666,15 @@ function fase1(agent) {
 
 function fase2(agent) {
     console.log('CONVERSACION Funcion: Fase2');
-    agent.add('En la fase 2 puede, entre otros:');
+    agent.add('En la fase 2 se podía, entre otros:');
     agent.add('- Circular por su provincia o isla en grupos de hasta 15 personas.');
-    agent.add('- Comprar en tiendas y centros comerciales, donde el aforo está limitado al 40%.');
+    agent.add('- Comprar en tiendas y centros comerciales, donde el aforo estaba limitado al 40%.');
     agent.add('- Ir a bares y restaurantes para consumir en el local, con un aforo máximo del 40%, o en las terrazas, aforo máximo del 50%.');
     agent.add('- Acudir a centros culturales y deportivos.');
     agent.add('- Alojarse en un hotel e ir a piscinas y playas.');
     agent.add(new Card({
-            title: 'Qué puedo hacer en la fase 2',
-            buttonText: 'Qué puedo hacer en la fase 2',
+            title: 'Qué se podía hacer en la fase 2',
+            buttonText: 'Qué se podía hacer en la fase 2',
             buttonUrl: loQuePuedesHacerFase2Url
         })
     );
@@ -683,9 +684,9 @@ function fase2(agent) {
 
 function fase3(agent) {
     console.log('CONVERSACION Funcion: Fase3');
-    agent.add('En la fase 3 puede, entre otros:');
+    agent.add('En la fase 3 se podía, entre otros:');
     agent.add('- Circular por su provincia o isla en grupos de hasta 20 personas y sin franjas horarias.');
-    agent.add('- Comprar en tiendas, donde el aforo está limitado al 50%.');
+    agent.add('- Comprar en tiendas, donde el aforo estaba limitado al 50%.');
     agent.add('- Ir a bares y restaurantes para consumir en el local, con un aforo máximo del 50%, o en las terrazas, aforo máximo del 75%.');
     agent.add('No dude en plantearme dudas más concretas o elegir una de las categorías sugeridas.');
     sugerenciasFases(agent, 3);

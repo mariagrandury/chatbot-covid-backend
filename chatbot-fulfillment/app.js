@@ -21,6 +21,7 @@ let isla = false;
 let faseCliente;
 let faseCliente2;
 let fasePorDefecto = 3;
+let nuevaNormalidad = true;
 let calificacion;
 let opiniones = [];
 
@@ -59,8 +60,8 @@ function explicacion(agent) {
     agent.add('🧾 Las medidas de prevención que se deben adoptar en diferentes espacios, como restaurantes, centros culturales, hoteles, piscinas y playas.');
     agent.add('📉 La evolución de la pandemia en España y las características de las diferentes fases del plan de transición a una nueva normalidad.');
     agent.add('Puede plantearme sus dudas escribiendo en su teclado o seleccionar alguna de las sugerencias que le propongo.');
-    agent.add('Para ver aclaraciones sobre los emoticonos de dichas sugerencias, mantenga pulsado sobre ellos.');
-    agent.add('En todo momento puede escribir \"Menú\" para volver al menú inicial.');
+    agent.add('Si está utilizando su móvil, mantenga pulsada una de dichas sugerencias para ver aclaraciones sobre los emoticonos.');
+    agent.add('En todo momento puede escribir \"Inicio\" o pulsar el botón de la esquina superior derecha para volver al menú inicial.');
     agent.add('Dicho esto, ¿en qué puedo ayudarle?');
     sugerenciasInicio(agent);
 }
@@ -81,11 +82,13 @@ function sugerenciasInicio(agent) {
     agent.add(new Suggestion('Medidas de seguridad adoptadas'));
     agent.add(new Suggestion('Evolución 📉'));
     agent.add(new Suggestion('Situacíon actual y fases de la desescalada'));
-    agent.add(new Suggestion('Internacional 🌍'));
-    agent.add(new Suggestion('Estadísticas de la COVID-19 en el mundo'));
+    if (agent.intent !== 'Internacional') {
+        agent.add(new Suggestion('Internacional 🌍 '));
+        agent.add(new Suggestion('Estadísticas de la COVID-19 en el mundo'));
+    }
 }
 
-function menu(agent) {
+function inicio(agent) {
     console.log('CONVERSACION Intent: ' + agent.intent);
     agent.add('¿Qué puedo hacer por usted?');
     sugerenciasInicio(agent);
@@ -340,10 +343,20 @@ function medidasHigiene(agent) {
     agent.add('- Si tose o estornuda, cubrirse boca y nariz con el codo');
     agent.add('- Usar pañuelos desechables');
     agent.add('¿Le puedo ayudar con algo más?');
+    agent.add(new Card({
+            title: 'Uso de mascarillas',
+            buttonText: 'Uso de mascarillas',
+            buttonUrl: mascarillasUrl
+        })
+    );
     sugerenciasInicio(agent);
 }
 
 // ----------------------------------------- MEDIDAS DE SEGURIDAD ------------------------------------------------------
+
+const hosteleriaUrl = 'https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov-China/img/COVID19_Consejos_bares_terrazas.jpg';
+const movilidadUrl = 'https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov-China/documentos/COVID19_Movilidad_y_seguridad_vial.pdf';
+const mascarillasUrl = 'https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov-China/documentos/COVID19_Mascarillas_higienicas_poblacion_general.pdf';
 
 function medidasSeguridad(agent) {
     console.log('CONVERSACION Intent: ' + agent.intent);
@@ -406,6 +419,12 @@ function medidasHosteleria(agent) {
     agent.add('- Eliminar productos de autoservicio como servilleteros y priorizar monodosis desechables.');
     agent.add('Recuerde respetar siempre las medidas de higiene y prevención establecidas.');
     agent.add('¿Quiere que le informe sobre medidas adoptadas en otros ámbitos?');
+    agent.add(new Card({
+            title: 'Recomendaciones en bares y restaurantes',
+            buttonText: 'Recomendaciones en bares y restaurantes',
+            buttonUrl: hosteleriaUrl
+        })
+    );
     sugMedidasHigiene(agent);
     sugMedidasCentrosCulturales(agent);
     sugMedidasTurismo(agent);
@@ -562,23 +581,33 @@ const transicionFase3Url = 'https://www.mscbs.gob.es/profesionales/saludPublica/
 
 function fases(agent) {
     console.log('CONVERSACION Intent: ' + agent.intent);
-    if (provincia) {
-        if (faseCliente2) {
-            agent.add(faseCliente2);
-        } else if (isla) {
-            agent.add('Su isla, ' + provincia + ', se encuentra en la fase ' + faseCliente + '.');
-        } else {
-            agent.add('Su provincia, ' + provincia + ', se encuentra en la fase ' + faseCliente + '.');
+    if (nuevaNormalidad) {
+        if (provincia) {
+            if (isla) {
+                agent.add('Su isla, ' + provincia + ', se encuentra en la nueva normalidad.');
+            } else {
+                agent.add('Su provincia, ' + provincia + ', se encuentra en la nueva normalidad.');
+            }
         }
     }
-    agent.add('Si quiere conocer la fase de todas las provincias e islas haga click en el siguiente enlace:');
-    agent.add(new Card({
-            title: 'Mapa fases 8 Junio',
-            buttonText: 'Mapa fases 8 Junio',
-            buttonUrl: mapaTransicion8Junio
-        })
-    );
-    agent.add('¿Sobre qué quiere que le informe?');
+        /*if (provincia) {
+            if (faseCliente2) {
+                agent.add(faseCliente2);
+            } else if (isla) {
+                agent.add('Su isla, ' + provincia + ', se encuentra en la fase ' + faseCliente + '.');
+            } else {
+                agent.add('Su provincia, ' + provincia + ', se encuentra en la fase ' + faseCliente + '.');
+            }
+        }
+        agent.add('Si quiere conocer la fase de todas las provincias e islas haga click en el siguiente enlace:');
+        agent.add(new Card({
+                title: 'Mapa fases 8 Junio',
+                buttonText: 'Mapa fases 8 Junio',
+                buttonUrl: mapaTransicion8Junio
+            })
+        );
+        agent.add('¿Sobre qué quiere que le informe?');*/
+    agent.add('¿Sobre cuál de las fases de la transición a la nueva normalidad quiere que le informe?');
     agent.add(new Suggestion('Situación actual 📅'));
     agent.add(new Suggestion('Situación actual (Ministerio de Sanidad)'));
     agent.add(new Suggestion('Fase 1️⃣'));
@@ -609,7 +638,9 @@ function fasesInformacion(agent) {
     else if (nfase === 2) { fase2(agent); }
     else if (nfase === 3) { fase3(agent);
     } else {
-        agent.add('El plan para la transición a una nueva normalidad solo incluye fases 1, 2 y 3.');
+        agent.add('Actualmente la transmisión en el país ha descendido y nos encontramos en la nueva normalidad.');
+        agent.add('Han terminado las restricciones sociales y económicas, pero se mantiene la vigilancia epidemiológica, la capacidad reforzada del sistema sanitario y la autoprotección de la ciudadanía.');
+        agent.add('El plan para la transición a una nueva normalidad incluía fases 1, 2 y 3.');
         agent.add('¿Sobre cuál de ellas quiere que le informe?');
     }
 }
@@ -1410,8 +1441,8 @@ function provinciasYfases() {
 // Estadísticas de la COVID-19 en el mundo (info: OMS)
 
 function internacional(agent) { // TODO poner banderas
-    agent.add('Los 10 países con más afectados por la COVID-19 son los siguientes.');
-    agent.add('Los datos corresponden al 8 de junio.');
+    /*
+    agent.add('A día 8 de junio, los 10 países con más afectados por la COVID-19 son:');
     agent.add('A: Afectados, F: Fallecidos, C: Curados');
     agent.add('1. EEUU:');
     agent.add('A: 1.942.363 - F: 110.514 - C: 506.367');
@@ -1433,6 +1464,14 @@ function internacional(agent) { // TODO poner banderas
     agent.add('A: 191.102 - F: 29.158 - C: 70.961');
     agent.add('10. Alemania:');
     agent.add('A: 185.750 - F: 8.685 - C: 169.224');
+     */
+    agent.add('Para acceder al mapa interactivo y las estadísticas de la OMS, haga click en el siguiente enlace:');
+    agent.add(new Card({
+            title: 'Mapa interactivo OMS',
+            buttonText: 'Mapa interactivo OMS',
+            buttonUrl: 'https://covid19.who.int/'
+        })
+    );
     agent.add('¿Le puedo ayudar en algo más?');
     sugerenciasInicio(agent);
 }
@@ -1532,7 +1571,7 @@ router.post('/', (request, response) => {
     intentMap.set('A - Explicacion', explicacion);
     intentMap.set('Fallback', fallback);
     intentMap.set('A - Gracias', gracias);
-    intentMap.set('A - Menu', menu);
+    intentMap.set('A - Menu', inicio);
     intentMap.set('A - Adios', adios);
     intentMap.set('A - Opinion', opinion);
     intentMap.set('A - Opinion 1 estrella', opinionRecibida);

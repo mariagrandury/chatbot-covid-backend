@@ -571,6 +571,7 @@ function medidasJuegosYapuestas(agent) {
 // --------------------------- PLAN PARA LA TRANSICIÓN A UNA NUEVA NORMALIDAD ------------------------------------------
 
 const situacionActualUrl = 'https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov-China/situacionActual.htm';
+const situacionActualMapaUrl = 'https://cnecovid.isciii.es/covid19/';
 const mapaTransicion8Junio = 'https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov-China/img/Mapa_de_Transicion_hacia_la_nueva_normalidad.jpg';
 const transicionFase1Url = 'https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov-China/documentos/09052020_Plan_Transicion_Guia_Fase_1.pdf';
 const loQuePuedesHacerFase1Url = 'https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov-China/img/Esto_es_lo_que_puedes_hacer_Fase-1.jpg';
@@ -590,6 +591,8 @@ function fases(agent) {
             }
         }
         agent.add('Han terminado las restricciones sociales y económicas, pero se mantiene la vigilancia epidemiológica, la capacidad reforzada del sistema sanitario y la autoprotección de la ciudadanía.');
+    } else {
+        agent.add('Su provincia, ' + provincia + ', se encuentra en la fase ' + faseCliente + ' flexibilizada.');
     }
         /*if (provincia) {
             if (faseCliente2) {
@@ -621,11 +624,14 @@ function fases(agent) {
 
 function situacionActual(agent) {
     console.log('CONVERSACION Intent: ' + agent.intent);
-    agent.add('Si quiere conocer la situación actual en España haga click en el siguiente enlace:');
+    agent.add('A día 23 de Julio, datos del Ministerio de Salud afirman que:');
+    agent.add('El número de casos confirmados por COVID-19 en España es 267.551.');
+    agent.add('El número de fallecidos es 28.426.');
+    agent.add('Si quiere acceder a un mapa interactivo de la situación actual en España haga click en el siguiente enlace:');
     agent.add(new Card({
-            title: 'Situación actual',
-            buttonText: 'Situación actual',
-            buttonUrl: situacionActualUrl
+            title: 'Mapa situación actual',
+            buttonText: 'Mapa situación actual',
+            buttonUrl: situacionActualMapaUrl
         })
     );
     agent.add('¿En qué más le puedo ayudar?');
@@ -639,7 +645,7 @@ function fasesInformacion(agent) {
     else if (nfase === 2) { fase2(agent); }
     else if (nfase === 3) { fase3(agent);
     } else {
-        agent.add('Actualmente la transmisión en el país ha descendido y nos encontramos en la nueva normalidad.');
+        agent.add('Actualmente la transmisión en el país ha descendido y la mayoría de las provincias se encuentran en la nueva normalidad.');
         agent.add('Han terminado las restricciones sociales y económicas, pero se mantiene la vigilancia epidemiológica, la capacidad reforzada del sistema sanitario y la autoprotección de la ciudadanía.');
         agent.add('El plan para la transición a una nueva normalidad incluía fases 1, 2 y 3.');
         agent.add('¿Sobre cuál de ellas quiere que le informe?');
@@ -648,15 +654,15 @@ function fasesInformacion(agent) {
 
 function fase1(agent) {
     console.log('CONVERSACION Function: Fase1');
-    agent.add('En la fase 1 se podía, entre otros:');
+    agent.add('En la fase 1 se puede, entre otros:');
     agent.add('- Circular por su provincia o isla en grupos de hasta 10 personas.');
-    agent.add('- Comprar en mercadillos y tiendas de hasta 400m2, donde el aforo estaba limitado al 30%.');
+    agent.add('- Comprar en mercadillos y tiendas de hasta 400m2, donde el aforo está limitado al 30%.');
     agent.add('- Ir a terrazas al aire libre limitadas al 50% de las mesas.');
     agent.add('- Acudir a lugares de culto.');
     agent.add('- Pasear y hacer deporte al aire libre.');
     agent.add(new Card({
-            title: 'Qué se podía hacer en la fase 1',
-            buttonText: 'Qué se podía hacer en la fase 1',
+            title: 'Qué se puede hacer en la fase 1',
+            buttonText: 'Qué se puede hacer en la fase 1',
             buttonUrl: loQuePuedesHacerFase1Url
         })
     );
@@ -666,15 +672,15 @@ function fase1(agent) {
 
 function fase2(agent) {
     console.log('CONVERSACION Funcion: Fase2');
-    agent.add('En la fase 2 se podía, entre otros:');
+    agent.add('En la fase 2 se puede, entre otros:');
     agent.add('- Circular por su provincia o isla en grupos de hasta 15 personas.');
-    agent.add('- Comprar en tiendas y centros comerciales, donde el aforo estaba limitado al 40%.');
+    agent.add('- Comprar en tiendas y centros comerciales, donde el aforo está limitado al 40%.');
     agent.add('- Ir a bares y restaurantes para consumir en el local, con un aforo máximo del 40%, o en las terrazas, aforo máximo del 50%.');
     agent.add('- Acudir a centros culturales y deportivos.');
     agent.add('- Alojarse en un hotel e ir a piscinas y playas.');
     agent.add(new Card({
-            title: 'Qué se podía hacer en la fase 2',
-            buttonText: 'Qué se podía hacer en la fase 2',
+            title: 'Qué se puede hacer en la fase 2',
+            buttonText: 'Qué se puede hacer en la fase 2',
             buttonUrl: loQuePuedesHacerFase2Url
         })
     );
@@ -684,9 +690,9 @@ function fase2(agent) {
 
 function fase3(agent) {
     console.log('CONVERSACION Funcion: Fase3');
-    agent.add('En la fase 3 se podía, entre otros:');
+    agent.add('En la fase 3 se puede, entre otros:');
     agent.add('- Circular por su provincia o isla en grupos de hasta 20 personas y sin franjas horarias.');
-    agent.add('- Comprar en tiendas, donde el aforo estaba limitado al 50%.');
+    agent.add('- Comprar en tiendas, donde el aforo está limitado al 50%.');
     agent.add('- Ir a bares y restaurantes para consumir en el local, con un aforo máximo del 50%, o en las terrazas, aforo máximo del 75%.');
     agent.add('No dude en plantearme dudas más concretas o elegir una de las categorías sugeridas.');
     sugerenciasFases(agent, 3);
@@ -1396,14 +1402,9 @@ function telefonosInfo(agent) {
 
 ////////////////////////////////////////////// PROVINCIAS Y FASES  /////////////////////////////////////////////////////
 
-const provinciasFase2 = ['Ceuta', 'Madrid',
-    'Ávila', 'Burgos', 'Palencia', 'Salamanca', 'Segovia', 'Soria', 'Valladolid', 'Zamora',
-    'Alicante', 'Castellón', 'Valencia',
-    'Barcelona', 'Lérida', 'Gerona',
-    'Albacete', 'Ciudad Real', 'Toledo'
-];
+const provinciasFase2 = ['Huesca', 'Zaragoza'];
 
-const provinciasFase3 = ['El Hierro', 'La Gomera', 'La Graciosa', 'Formentera',
+/*const provinciasFase3 = ['El Hierro', 'La Gomera', 'La Graciosa', 'Formentera',
     'La Palma', 'Tenerife', 'Fuerteventura', 'Gran Canaria', 'Lanzarote', 'Mallorca', 'Menorca', 'Cabrera', 'Ibiza',
     'Cantabria', 'Navarra', 'La Rioja', 'Asturias', 'Murcia', 'Melilla', 'Asturias', 'Asturias',
     'A Coruña', 'Lugo', 'Orense', 'Pontevedra',
@@ -1412,7 +1413,7 @@ const provinciasFase3 = ['El Hierro', 'La Gomera', 'La Graciosa', 'Formentera',
     'Huesca', 'Zaragoza', 'Teruel',
     'Huelva', 'Sevilla', 'Córdoba', 'Jaén', 'Granada', 'Almería', 'Málaga', 'Cádiz',
     'Cuenca', 'Guadalajara'
-];
+];*/
 
 const islas = [
     /* Provincia de Santa Cruz de Tenerife: */ 'El Hierro', 'La Gomera', 'La Palma', 'Tenerife',
@@ -1422,12 +1423,14 @@ const islas = [
 
 function provinciasYfases() {
     for (let i = 0; i<provinciasFase2.length; i++) {
-        if (provinciasFase2[i] === provincia) { faseCliente = 2; }
-        else { for (let i = 0; i<provinciasFase3.length; i++) {
+        if (provinciasFase2[i] === provincia) { nuevaNormalidad = false; faseCliente = 2; }
+        //else {
+            /*for (let i = 0; i<provinciasFase3.length; i++) {
             if (provinciasFase3[i] === provincia) { faseCliente = 3; }
-            else if (provincia === 'Tarragona') {faseCliente2 = 'Su provincia, Tarragona, se encuentra en la fase 2, exceptuando Alt Pirineu i Aran, Terres de l\'Ebre y Camp de Tarragona que han pasado a la 3.'; }
-            }
-        }
+            if (provincia === 'Tarragona') {faseCliente2 = 'Su provincia, Tarragona, se encuentra en la fase 2, exceptuando Alt Pirineu i Aran, Terres de l\'Ebre y Camp de Tarragona que han pasado a la 3.'; }
+            */
+            //faseCliente = 4;
+        //}
     }
 
     for (let i = 0; i<islas.length; i++) {
@@ -1466,6 +1469,12 @@ function internacional(agent) { // TODO poner banderas
     agent.add('10. Alemania:');
     agent.add('A: 185.750 - F: 8.685 - C: 169.224');
      */
+    agent.add('A día 23 de Julio, datos de la OMS afirman que:');
+    agent.add('- Hay 14.971.036 casos confirmados por COVID-19 en el mundo.');
+    agent.add('- El número de muertos asciende a 618.017.');
+    agent.add('- EEUU es el país con más casos, 3.868.453.');
+    agent.add('- En Brasil hay 2.159.654 casos.');
+    agent.add('- En India hay 1.238.635 casos.');
     agent.add('Para acceder al mapa interactivo y las estadísticas de la OMS, haga click en el siguiente enlace:');
     agent.add(new Card({
             title: 'Mapa interactivo OMS',
@@ -1502,6 +1511,10 @@ router.post('/', (request, response) => {
     if (request.body.queryResult.action === 'A-Opinion.A-Opinion-fallback') {
         opiniones.push(request.body.queryResult.queryText);
         console.log('CONVERSACION Opinión: ' + request.body.queryResult.queryText);
+    }
+    if (request.body.queryResult.queryText === 'Soy amigo de Marcos') {
+        agent.add('Pues de mi parte, te debe un chupito jeje');
+        agent.add('¡Ha sido un placer! Pero tengo que volver al curro...');
     }
     if (request.body.queryResult.queryText === 'Hola Max, conozco a tu mamá') {
         agent.add('¡Ay, qué guay!💃 ¿Sabías que le encantan los Lacasitos? Podías regalarle unos poquitos 🙄🤭');

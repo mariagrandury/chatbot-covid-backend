@@ -17,7 +17,7 @@
     "dialogflow": "^0.6.0",
     "dialogflow-fulfillment": "^0.5.0",
     "express": "^4.17.1",
-    "googleapis": "^27.0.0",
+    "googleapis": "^39.1.0",
     "moment": "^2.24.0",
     "nock": "^10.0.6",
     "read-excel-file": "^4.0.6",

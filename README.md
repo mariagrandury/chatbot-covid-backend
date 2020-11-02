@@ -1,5 +1,30 @@
-# Chatbot Backend
-This project was generated with Serverless Framework’s Open Source CLI and AWS.
+# Chatbot COVID-19: Backend
+
+AURORA is a chatbot that understands and answers questions (in Spanish) about the COVID-19: symptoms, prevention, regulation, the situation in Spain.
+Don't hesitate to chat with [AURORA!](https://d3g60fts6ncstu.cloudfront.net/)
+
+<p align="center">
+  <img src="chatbot-covid-preview.png" alt="drawing" width="300"/>
+</p>
+
+## Motivation
+
+In March 2020, a virus appeared to seriously threaten our health. These were days of widespread confusion, uncertainty, and doubt. The infoxication or generation of many answers to these doubts by the media and social networks (many of which turned out to be false) caused even more unrest in the Spaniards.
+
+At that precise moment, the idea of developing this chatbot was born to generate certainties and a sense of control in the citizens based on truthful information from the Ministry of Health.
+
+With AURORA, a virtual assistant that solves doubts about the COVID-19, it is intended that citizens exercise control over what is in their hands to protect themselves and their loved ones. 
+
+## Technologies
+
+The backend of the chatbot was developed using:
+
+- Dialogflow
+
+- Serverless Framework’s Open Source CLI
+
+- AWS Lambda
+
 
 ## Installing Node.js
 Serverless is a Node.js CLI tool so the first thing you need to do is to install Node.js on your machine.

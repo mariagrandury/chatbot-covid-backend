@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "dialogflow": "^0.10.3",
+    "dialogflow": "^4.0.3",
     "uuid": "^3.3.2"
   }
 }
